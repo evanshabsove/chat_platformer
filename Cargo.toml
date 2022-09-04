@@ -7,6 +7,8 @@ edition = "2021"
 
 [dependencies]
 bevy = { version = "0.8.1", features = ["dynamic"] }
+bevy_asset_loader = "0.12.1"
+bevy_ecs_tilemap = "0.7.0"
 
 # Enable a small amount of optimization in debug mode
 [profile.dev]

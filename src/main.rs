@@ -40,7 +40,7 @@ fn spawn_camera(mut commands: Commands) {
 fn spawn_player(mut commands: Commands, ascii: Res<AsciiSheet>, asset_server: Res<AssetServer>) {
     let mut sprite = TextureAtlasSprite::new(1);
     sprite.color = Color::rgb(0.3, 0.3, 0.9);
-    sprite.custom_size = Some(Vec2::splat(20.0));
+    sprite.custom_size = Some(Vec2::splat(100.0));
 
     commands
         .spawn_bundle(SpriteSheetBundle {

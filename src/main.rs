@@ -1,7 +1,4 @@
-use bevy::{
-    prelude::*,
-    render::camera::{DepthCalculation, ScalingMode, WindowOrigin},
-};
+use bevy::{prelude::*, render::texture::ImageSettings};
 
 pub const CLEAR: Color = Color::rgb(0.1, 0.1, 0.1);
 pub const RESOLUTION: f32 = 16.0 / 9.0;
@@ -16,7 +13,9 @@ fn main() {
             resizable: false,
             ..Default::default()
         })
+        .insert_resource(ImageSettings::default_nearest())
         .add_startup_system(spawn_camera)
+        .add_startup_system(spawn_player)
         .add_startup_system_to_stage(StartupStage::PreStartup, load_ascii)
         .add_plugins(DefaultPlugins)
         .run();
@@ -25,25 +24,40 @@ fn main() {
 fn spawn_camera(mut commands: Commands) {
     let mut camera = Camera2dBundle::default();
 
-    let projection: OrthographicProjection = OrthographicProjection {
-        top: 1.0,
-        bottom: -1.0,
-        right: 1.0 * RESOLUTION,
-        left: -1.0 * RESOLUTION,
-        near: 1.0,
-        far: -1.0,
-        scaling_mode: ScalingMode::None,
-        window_origin: WindowOrigin::Center,
-        scale: 1.0,
-        depth_calculation: DepthCalculation::Distance,
-    };
+    // let projection: OrthographicProjection = OrthographicProjection {
+    //     top: 1.0,
+    //     bottom: -1.0,
+    //     right: 1.0 * RESOLUTION,
+    //     left: -1.0 * RESOLUTION,
+    //     ..default()
+    // };
 
-    camera.projection = projection;
+    // camera.projection = projection;
 
     commands.spawn_bundle(camera);
 }
 
-fn spawn_player(mut commands: Commands) {}
+fn spawn_player(mut commands: Commands, ascii: Res<AsciiSheet>, asset_server: Res<AssetServer>) {
+    commands.spawn_bundle(SpriteBundle {
+        texture: asset_server.load("Ascii.png"),
+        ..default()
+    });
+    // let mut sprite = TextureAtlasSprite::new(1);
+    // sprite.color = Color::rgb(0.3, 0.3, 0.9);
+    // sprite.custom_size = Some(Vec2::splat(1.0));
+
+    // commands
+    //     .spawn_bundle(SpriteSheetBundle {
+    //         sprite: sprite,
+    //         texture_atlas: ascii.0.clone(),
+    //         transform: Transform {
+    //             translation: Vec3::new(0.0, 0.0, 900.0),
+    //             ..Default::default()
+    //         },
+    //         ..Default::default()
+    //     })
+    //     .insert(Name::new("Player"));
+}
 
 struct AsciiSheet(Handle<TextureAtlas>);
 

@@ -1,11 +1,14 @@
 use bevy::prelude::*;
+use bevy_inspector_egui::Inspectable;
 
-use crate::AsciiSheet;
+use crate::{ascii::spawn_ascii_sprite, ascii::AsciiSheet, TILE_SIZE};
 
 pub struct PlayerPugin;
 
-#[derive(Component)]
-pub struct Player;
+#[derive(Component, Inspectable)]
+pub struct Player {
+    speed: f32,
+}
 
 impl Plugin for PlayerPugin {
     fn build(&self, app: &mut App) {
@@ -19,58 +22,50 @@ fn player_movement(
     keyboard: Res<Input<KeyCode>>,
     time: Res<Time>,
 ) {
-    let (_player, mut transform) = player_query.single_mut();
+    let (player, mut transform) = player_query.single_mut();
 
     if keyboard.pressed(KeyCode::W) {
-        transform.translation.y += 100.0 * time.delta_seconds();
+        transform.translation.y += 1.0 * time.delta_seconds() * player.speed;
     }
 
     if keyboard.pressed(KeyCode::S) {
-        transform.translation.y -= 100.0 * time.delta_seconds();
+        transform.translation.y -= 1.0 * time.delta_seconds() * player.speed;
     }
 
     if keyboard.pressed(KeyCode::A) {
-        transform.translation.x -= 100.0 * time.delta_seconds();
+        transform.translation.x -= 1.0 * time.delta_seconds() * player.speed;
     }
 
     if keyboard.pressed(KeyCode::D) {
-        transform.translation.x += 100.0 * time.delta_seconds();
+        transform.translation.x += 1.0 * time.delta_seconds() * player.speed;
     }
 }
 
 fn spawn_player(mut commands: Commands, ascii: Res<AsciiSheet>) {
-    let mut sprite = TextureAtlasSprite::new(1);
-    sprite.color = Color::rgb(0.3, 0.3, 0.9);
-    sprite.custom_size = Some(Vec2::splat(100.0));
+    let player = spawn_ascii_sprite(
+        &mut commands,
+        &ascii,
+        1,
+        Color::rgb(0.3, 0.3, 0.9),
+        Vec3::new(0.0, 0.0, 900.0),
+    );
 
-    let player = commands
-        .spawn_bundle(SpriteSheetBundle {
-            sprite: sprite,
-            texture_atlas: ascii.0.clone(),
-            transform: Transform {
-                translation: Vec3::new(0.0, 0.0, 900.0),
-                ..Default::default()
-            },
-            ..Default::default()
-        })
+    commands
+        .entity(player)
         .insert(Name::new("Player"))
-        .insert(Player)
+        .insert(Player { speed: 100.0 })
         .id();
 
-    let mut sprite = TextureAtlasSprite::new(0);
-    sprite.color = Color::rgb(0.5, 0.5, 0.5);
-    sprite.custom_size = Some(Vec2::splat(100.0));
+    let background = spawn_ascii_sprite(
+        &mut commands,
+        &ascii,
+        0,
+        Color::rgb(0.5, 0.5, 0.5),
+        Vec3::new(0.0, 0.0, -1.0),
+    );
 
-    let background = commands
-        .spawn_bundle(SpriteSheetBundle {
-            sprite: sprite,
-            texture_atlas: ascii.0.clone(),
-            transform: Transform {
-                translation: Vec3::new(0.0, 0.0, -1.0),
-                ..Default::default()
-            },
-            ..Default::default()
-        })
+    commands
+        .entity(background)
         .insert(Name::new("Background"))
         .id();
 

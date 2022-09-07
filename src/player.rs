@@ -47,7 +47,7 @@ fn spawn_player(mut commands: Commands, ascii: Res<AsciiSheet>) {
         &ascii,
         1,
         Color::rgb(0.3, 0.3, 0.9),
-        Vec3::new(0.0, 0.0, 900.0),
+        Vec3::new(2.0 * TILE_SIZE, -2.0 * TILE_SIZE, 900.0),
     );
 
     commands

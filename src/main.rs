@@ -3,10 +3,12 @@ use bevy::{prelude::*, render::texture::ImageSettings};
 mod ascii;
 mod debug;
 mod player;
+mod tilemap;
 
 use ascii::AsciiPlugin;
 use debug::DebugPlugin;
 use player::PlayerPugin;
+use tilemap::TileMapPlugin;
 
 pub const CLEAR: Color = Color::rgb(0.1, 0.1, 0.1);
 pub const RESOLUTION: f32 = 16.0 / 9.0;
@@ -27,6 +29,7 @@ fn main() {
         .add_startup_system(spawn_camera)
         .add_plugin(AsciiPlugin)
         .add_plugin(PlayerPugin)
+        .add_plugin(TileMapPlugin)
         .add_plugin(DebugPlugin)
         .run();
 }

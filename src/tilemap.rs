@@ -32,11 +32,11 @@ fn build_map(mut commands: Commands, ascii: Res<AsciiSheet>) {
         }
     }
 
-    commands
-        .spawn()
-        .insert(Name::new("Map"))
-        .insert(Transform::default())
-        .insert(GlobalTransform::default())
-        .insert(ComputedVisibility::default())
-        .push_children(&tiles);
+    // commands
+    //     .spawn()
+    //     .insert(Name::new("Map"))
+    //     .insert(Transform::default())
+    //     .insert(GlobalTransform::default())
+    //     .insert(ComputedVisibility::default())
+    //     .push_children(&tiles);
 }

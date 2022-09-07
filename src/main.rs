@@ -1,4 +1,7 @@
-use bevy::{prelude::*, render::texture::ImageSettings};
+use bevy::{
+    prelude::*,
+    render::{camera::ScalingMode, texture::ImageSettings},
+};
 
 mod ascii;
 mod debug;
@@ -35,7 +38,17 @@ fn main() {
 }
 
 fn spawn_camera(mut commands: Commands) {
-    let camera = Camera2dBundle::default();
+    let camera = Camera2dBundle {
+        projection: OrthographicProjection {
+            left: -1000.0 * RESOLUTION,
+            right: 1000.0 * RESOLUTION,
+            top: 1000.0,
+            bottom: -1000.0,
+            scaling_mode: ScalingMode::None,
+            ..default()
+        },
+        ..default()
+    };
 
     commands.spawn_bundle(camera);
 }

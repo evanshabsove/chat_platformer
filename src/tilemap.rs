@@ -7,6 +7,9 @@ use crate::TILE_SIZE;
 
 pub struct TileMapPlugin;
 
+#[derive(Component)]
+pub struct TileCollider;
+
 impl Plugin for TileMapPlugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system(build_map);
@@ -28,15 +31,20 @@ fn build_map(mut commands: Commands, ascii: Res<AsciiSheet>) {
                     Vec3::new(x as f32 * TILE_SIZE, -(y as f32) * TILE_SIZE, 100.0),
                 );
                 tiles.push(tile);
+
+                if char == '#' {
+                    commands.entity(tile).insert(TileCollider);
+                }
             }
         }
     }
 
-    // commands
-    //     .spawn()
-    //     .insert(Name::new("Map"))
-    //     .insert(Transform::default())
-    //     .insert(GlobalTransform::default())
-    //     .insert(ComputedVisibility::default())
-    //     .push_children(&tiles);
+    commands
+        .spawn_bundle(SpatialBundle {
+            transform: Transform::default(),
+            visibility: Visibility { is_visible: true },
+            global_transform: GlobalTransform::default(),
+            ..default()
+        })
+        .push_children(&tiles);
 }

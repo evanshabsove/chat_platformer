@@ -1,5 +1,6 @@
 use bevy::prelude::*;
 use bevy_inspector_egui::Inspectable;
+use bevy_rapier2d::prelude::*;
 
 use crate::{ascii::spawn_ascii_sprite, ascii::AsciiSheet};
 
@@ -43,18 +44,18 @@ fn spawn_player(mut commands: Commands, ascii: Res<AsciiSheet>) {
         .insert(Player { speed: 5.0 })
         .id();
 
-    let background = spawn_ascii_sprite(
-        &mut commands,
-        &ascii,
-        0,
-        Color::rgb(0.5, 0.5, 0.5),
-        Vec3::new(0.0, 0.0, -1.0),
-    );
+    // let background = spawn_ascii_sprite(
+    //     &mut commands,
+    //     &ascii,
+    //     0,
+    //     Color::rgb(0.5, 0.5, 0.5),
+    //     Vec3::new(0.0, 0.0, -1.0),
+    // );
 
-    commands
-        .entity(background)
-        .insert(Name::new("Background"))
-        .id();
+    // commands
+    //     .entity(background)
+    //     .insert(Name::new("Background"))
+    //     .id();
 
-    commands.entity(player).push_children(&[background]);
+    // commands.entity(player).push_children(&[background]);
 }

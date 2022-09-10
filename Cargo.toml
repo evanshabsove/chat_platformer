@@ -10,6 +10,7 @@ bevy = { version = "0.8.1", features = ["dynamic"] }
 bevy-inspector-egui = "0.12.1"
 bevy_asset_loader = "0.12.1"
 bevy_ecs_tilemap = "0.7.0"
+bevy_rapier2d = "*"
 
 # Enable a small amount of optimization in debug mode
 [profile.dev]

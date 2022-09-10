@@ -2,6 +2,7 @@ use bevy::{
     prelude::*,
     render::{camera::ScalingMode, texture::ImageSettings},
 };
+use bevy_rapier2d::prelude::*;
 
 mod ascii;
 mod debug;
@@ -37,6 +38,10 @@ fn main() {
         .add_plugin(TileMapPlugin)
         .add_plugin(DebugPlugin)
         .add_plugin(MoverPlugin)
+        .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
+        .add_plugin(RapierDebugRenderPlugin::default())
+        .add_startup_system(setup_physics)
+        .add_system(print_ball_altitude)
         .run();
 }
 
@@ -54,4 +59,26 @@ fn spawn_camera(mut commands: Commands) {
     };
 
     commands.spawn_bundle(camera);
+}
+
+fn setup_physics(mut commands: Commands) {
+    /* Create the ground. */
+    commands
+        .spawn()
+        .insert(Collider::cuboid(500.0, 50.0))
+        .insert_bundle(TransformBundle::from(Transform::from_xyz(0.0, -100.0, 0.0)));
+
+    /* Create the bouncing ball. */
+    commands
+        .spawn()
+        .insert(RigidBody::Dynamic)
+        .insert(Collider::ball(50.0))
+        .insert(Restitution::coefficient(0.7))
+        .insert_bundle(TransformBundle::from(Transform::from_xyz(0.0, 400.0, 0.0)));
+}
+
+fn print_ball_altitude(positions: Query<&Transform, With<RigidBody>>) {
+    for transform in positions.iter() {
+        println!("Ball altitude: {}", transform.translation.y);
+    }
 }

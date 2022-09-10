@@ -3,8 +3,10 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 use crate::ascii::{spawn_ascii_sprite, AsciiSheet};
-use crate::{TILE_SIZE, X_DIFF, Y_DIFF};
+use crate::TILE_SIZE;
 
+const X_DIFF: f32 = 1.0;
+const Y_DIFF: f32 = 5.0;
 pub struct TileMapPlugin;
 
 #[derive(Component)]

@@ -3,7 +3,7 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 
 use crate::ascii::{spawn_ascii_sprite, AsciiSheet};
-use crate::TILE_SIZE;
+use crate::{TILE_SIZE, X_DIFF, Y_DIFF};
 
 pub struct TileMapPlugin;
 
@@ -28,7 +28,11 @@ fn build_map(mut commands: Commands, ascii: Res<AsciiSheet>) {
                     &ascii,
                     char as usize,
                     Color::rgb(0.9, 0.9, 0.9),
-                    Vec3::new(x as f32 * TILE_SIZE, -(y as f32) * TILE_SIZE, 100.0),
+                    Vec3::new(
+                        (x as f32 - X_DIFF) * TILE_SIZE,
+                        -(y as f32 - Y_DIFF) * TILE_SIZE,
+                        100.0,
+                    ),
                 );
                 tiles.push(tile);
 

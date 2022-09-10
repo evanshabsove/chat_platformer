@@ -16,6 +16,8 @@ use tilemap::TileMapPlugin;
 pub const CLEAR: Color = Color::rgb(0.1, 0.1, 0.1);
 pub const RESOLUTION: f32 = 16.0 / 9.0;
 pub const TILE_SIZE: f32 = 100.0;
+pub const X_DIFF: f32 = 1.0;
+pub const Y_DIFF: f32 = 5.0;
 fn main() {
     let height: f32 = 900.0;
     App::new()

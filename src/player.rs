@@ -39,13 +39,13 @@ fn player_movement(
     let (player, mut transform) = player_query.single_mut();
 
     let mut y_delta = 0.0;
-    if keyboard.pressed(KeyCode::W) {
-        y_delta += TILE_SIZE * time.delta_seconds() * player.speed;
-    }
+    // if keyboard.pressed(KeyCode::W) {
+    //     y_delta += TILE_SIZE * time.delta_seconds() * player.speed;
+    // }
 
-    if keyboard.pressed(KeyCode::S) {
-        y_delta -= TILE_SIZE * time.delta_seconds() * player.speed;
-    }
+    // if keyboard.pressed(KeyCode::S) {
+    //     y_delta -= TILE_SIZE * time.delta_seconds() * player.speed;
+    // }
 
     let mut x_delta = 0.0;
     if keyboard.pressed(KeyCode::A) {
@@ -92,7 +92,7 @@ fn spawn_player(mut commands: Commands, ascii: Res<AsciiSheet>) {
         &ascii,
         1,
         Color::rgb(0.3, 0.3, 0.9),
-        Vec3::new(2.0 * TILE_SIZE, -2.0 * TILE_SIZE, 900.0),
+        Vec3::new(0.0, 0.0, 900.0),
     );
 
     commands

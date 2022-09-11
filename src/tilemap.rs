@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_rapier2d::prelude::Collider;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
@@ -39,7 +40,10 @@ fn build_map(mut commands: Commands, ascii: Res<AsciiSheet>) {
                 tiles.push(tile);
 
                 if char == '#' {
-                    commands.entity(tile).insert(TileCollider);
+                    commands
+                        .entity(tile)
+                        .insert(Collider::cuboid(TILE_SIZE / 2.0, TILE_SIZE / 2.0))
+                        .insert(TileCollider);
                 }
             }
         }

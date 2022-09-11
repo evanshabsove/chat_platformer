@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_inspector_egui::Inspectable;
 use bevy_rapier2d::prelude::*;
 
-use crate::{ascii::spawn_ascii_sprite, ascii::AsciiSheet, TILE_SIZE};
+use crate::{ascii::spawn_ascii_sprite, ascii::AsciiSheet, GRAV, TILE_SIZE};
 
 pub struct PlayerPugin;
 
@@ -44,5 +44,6 @@ fn spawn_player(mut commands: Commands, ascii: Res<AsciiSheet>) {
         .insert(Player { speed: 5.0 })
         .insert(RigidBody::Dynamic)
         .insert(Collider::cuboid(TILE_SIZE / 2.0, TILE_SIZE / 2.0))
+        .insert(GravityScale(GRAV))
         .id();
 }

@@ -2,14 +2,12 @@ use bevy::prelude::*;
 use bevy_inspector_egui::Inspectable;
 use bevy_rapier2d::prelude::*;
 
-use crate::{ascii::spawn_ascii_sprite, ascii::AsciiSheet, GRAV, TILE_SIZE};
+use crate::{ascii::spawn_ascii_sprite, ascii::AsciiSheet, mover::Mover, GRAV, TILE_SIZE};
 
 pub struct PlayerPugin;
 
 #[derive(Component, Inspectable)]
-pub struct Player {
-    pub speed: f32,
-}
+pub struct Player {}
 
 impl Plugin for PlayerPugin {
     fn build(&self, app: &mut App) {
@@ -41,9 +39,17 @@ fn spawn_player(mut commands: Commands, ascii: Res<AsciiSheet>) {
     commands
         .entity(player)
         .insert(Name::new("Player"))
-        .insert(Player { speed: 5.0 })
+        .insert(Player {})
         .insert(RigidBody::Dynamic)
+        .insert(Velocity {
+            linvel: Vec2::new(1.0, 2.0),
+            angvel: 0.4,
+        })
         .insert(Collider::cuboid(TILE_SIZE / 2.0, TILE_SIZE / 2.0))
         .insert(GravityScale(GRAV))
+        .insert(Mover {
+            speed: 100.0,
+            is_jumping: false,
+        })
         .id();
 }

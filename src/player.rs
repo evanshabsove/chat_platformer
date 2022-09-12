@@ -55,7 +55,7 @@ fn spawn_player(mut commands: Commands, ascii: Res<AsciiSheet>) {
         .insert(ActiveEvents::COLLISION_EVENTS)
         // .insert(LockedAxes::ROTATION_LOCKED)
         .insert(Mover {
-            speed: 250.0,
+            speed: 350.0,
             is_jumping: false,
         })
         .id();

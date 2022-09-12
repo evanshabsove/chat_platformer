@@ -19,7 +19,7 @@ use tilemap::TileMapPlugin;
 pub const CLEAR: Color = Color::rgb(0.1, 0.1, 0.1);
 pub const RESOLUTION: f32 = 16.0 / 9.0;
 pub const TILE_SIZE: f32 = 100.0;
-pub const GRAV: f32 = 1.0;
+pub const GRAV: f32 = 3.0;
 fn main() {
     let height: f32 = 900.0;
     App::new()
@@ -65,28 +65,13 @@ fn jump_reset(
     mut query: Query<(Entity, &mut Mover)>,
     mut collision_events: EventReader<CollisionEvent>,
 ) {
-    for mut collision_event in collision_events.iter() {
-        for (entity, mut mover) in query.iter_mut() {
-            set_jumping_false_if_touching_floor(entity, &mut mover, collision_event);
+    for _collision_event in collision_events.iter() {
+        for (_entity, mut mover) in query.iter_mut() {
+            set_jumping_false_if_touching_floor(&mut mover);
         }
     }
 }
 
-fn set_jumping_false_if_touching_floor(entity: Entity, mover: &mut Mover, event: &CollisionEvent) {
+fn set_jumping_false_if_touching_floor(mover: &mut Mover) {
     mover.is_jumping = false;
-    // match event {
-    //     CollisionEvent::Started(entity, mover, _) => {}
-    //     CollisionEvent::Stopped(entity, mover, _) => {}
-    // }
-    // if CollisionEvent::Started == event {
-    //     if h1.entity() == entity || h2.entity() == entity {
-    //         mover.is_jumping = false
-    //     }
-    // }
 }
-
-// fn display_events(mut collision_events: EventReader<CollisionEvent>) {
-//     for collision_event in collision_events.iter() {
-//         println!("Received collision event: {:?}", collision_event);
-//     }
-// }

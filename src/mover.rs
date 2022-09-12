@@ -1,12 +1,7 @@
 use crate::player::Player;
 use bevy::prelude::*;
-use bevy_rapier2d::{
-    prelude::{ActiveEvents, ExternalForce, Velocity},
-    rapier::prelude::CollisionEvent,
-};
+use bevy_rapier2d::prelude::{ExternalForce, Velocity};
 pub struct MoverPlugin;
-
-use crate::TILE_SIZE;
 
 #[derive(Component)]
 pub struct Mover {
@@ -23,44 +18,37 @@ impl Plugin for MoverPlugin {
 fn player_movement(
     mut player_query: Query<(&mut Mover, &mut Velocity, &mut ExternalForce), With<Player>>,
     keyboard: Res<Input<KeyCode>>,
-    time: Res<Time>,
 ) {
     let (mut mover, mut velocity, mut force) = player_query.single_mut();
 
     if keyboard.pressed(KeyCode::W) && !mover.is_jumping {
         velocity.linvel.y = mover.speed;
         mover.is_jumping = true;
-        // y_delta += TILE_SIZE * time.delta_seconds() * player.speed;
     }
-
-    // if keyboard.pressed(KeyCode::S) {
-    //     y_delta -= TILE_SIZE * time.delta_seconds() * player.speed;
-    // }
-
-    // let mut x_delta = 0.0;
-    // if keyboard.pressed(KeyCode::A) {
-    //     velocity.linvel.x = -(mover.speed);
-    // }
-
-    // if keyboard.pressed(KeyCode::D) {
-    //     velocity.linvel.x = (mover.speed);
-    // }
 
     if keyboard.pressed(KeyCode::A) {
-        force.force.x = -(100.0);
+        let new_horizontal_force = calc_force_diff(velocity.linvel.x, -TARGET_TOP_SPEED);
+        force.force.x = new_horizontal_force;
+    } else if keyboard.pressed(KeyCode::D) {
+        let new_horizontal_force = calc_force_diff(velocity.linvel.x, TARGET_TOP_SPEED);
+        force.force.x = new_horizontal_force;
+    } else {
+        if velocity.linvel.x.abs() > 0.01 {
+            let new_horizontal_force = -velocity.linvel.x;
+
+            force.force.x = new_horizontal_force;
+        }
     }
+}
 
-    if keyboard.pressed(KeyCode::D) {
-        force.force.x = 100.0;
-    }
-
-    // let target = transform.translation + Vec3::new(x_delta, 0.0, 0.0);
-    // // if wall_collision_check(target, &wall_query) {
-    // transform.translation = target;
-    // // }
-
-    // let target = transform.translation + Vec3::new(0.0, y_delta, 0.0);
-    // // if wall_collision_check(target, &wall_query) {
-    // transform.translation = target;
-    // }
+const TARGET_TOP_SPEED: f32 = 300.0;
+/// clamped_input is a 0.0-1.0 value representing the user's
+/// desired percentage of top speed to hold
+///
+/// `current_velocity` is the current horizontal velocity
+fn calc_force_diff(current_velocity: f32, target_velocity: f32) -> f32 {
+    let target_speed = target_velocity;
+    let diff_to_make_up = target_speed - current_velocity;
+    let new_force = diff_to_make_up * 2.0;
+    new_force
 }

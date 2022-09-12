@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_rapier2d::prelude::Collider;
+use bevy_rapier2d::prelude::{ActiveEvents, Collider, Friction, RigidBody};
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
@@ -42,7 +42,10 @@ fn build_map(mut commands: Commands, ascii: Res<AsciiSheet>) {
                 if char == '#' {
                     commands
                         .entity(tile)
+                        .insert(RigidBody::Fixed)
                         .insert(Collider::cuboid(TILE_SIZE / 2.0, TILE_SIZE / 2.0))
+                        .insert(ActiveEvents::COLLISION_EVENTS)
+                        .insert(Friction::coefficient(0.7))
                         .insert(TileCollider);
                 }
             }

@@ -12,7 +12,7 @@ mod tilemap;
 
 use ascii::AsciiPlugin;
 use debug::DebugPlugin;
-use mover::MoverPlugin;
+use mover::{Mover, MoverPlugin};
 use player::PlayerPugin;
 use tilemap::TileMapPlugin;
 
@@ -38,9 +38,10 @@ fn main() {
         .add_plugin(PlayerPugin)
         .add_plugin(TileMapPlugin)
         .add_plugin(DebugPlugin)
-        .add_plugin(MoverPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
+        .add_plugin(MoverPlugin)
         .add_plugin(RapierDebugRenderPlugin::default())
+        .add_system(jump_reset)
         .run();
 }
 
@@ -59,3 +60,33 @@ fn spawn_camera(mut commands: Commands) {
 
     commands.spawn_bundle(camera);
 }
+
+fn jump_reset(
+    mut query: Query<(Entity, &mut Mover)>,
+    mut collision_events: EventReader<CollisionEvent>,
+) {
+    for mut collision_event in collision_events.iter() {
+        for (entity, mut mover) in query.iter_mut() {
+            set_jumping_false_if_touching_floor(entity, &mut mover, collision_event);
+        }
+    }
+}
+
+fn set_jumping_false_if_touching_floor(entity: Entity, mover: &mut Mover, event: &CollisionEvent) {
+    mover.is_jumping = false;
+    // match event {
+    //     CollisionEvent::Started(entity, mover, _) => {}
+    //     CollisionEvent::Stopped(entity, mover, _) => {}
+    // }
+    // if CollisionEvent::Started == event {
+    //     if h1.entity() == entity || h2.entity() == entity {
+    //         mover.is_jumping = false
+    //     }
+    // }
+}
+
+// fn display_events(mut collision_events: EventReader<CollisionEvent>) {
+//     for collision_event in collision_events.iter() {
+//         println!("Received collision event: {:?}", collision_event);
+//     }
+// }

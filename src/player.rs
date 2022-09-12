@@ -41,14 +41,21 @@ fn spawn_player(mut commands: Commands, ascii: Res<AsciiSheet>) {
         .insert(Name::new("Player"))
         .insert(Player {})
         .insert(RigidBody::Dynamic)
+        .insert(ActiveCollisionTypes::default() | ActiveCollisionTypes::DYNAMIC_STATIC)
         .insert(Velocity {
-            linvel: Vec2::new(1.0, 2.0),
-            angvel: 0.4,
+            linvel: Vec2::new(0.0, 0.0),
+            angvel: 0.0,
+        })
+        .insert(ExternalForce {
+            force: Vec2::new(0.0, 0.0),
+            torque: 0.0,
         })
         .insert(Collider::cuboid(TILE_SIZE / 2.0, TILE_SIZE / 2.0))
         .insert(GravityScale(GRAV))
+        .insert(ActiveEvents::COLLISION_EVENTS)
+        // .insert(LockedAxes::ROTATION_LOCKED)
         .insert(Mover {
-            speed: 100.0,
+            speed: 250.0,
             is_jumping: false,
         })
         .id();

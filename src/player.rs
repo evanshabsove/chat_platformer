@@ -11,8 +11,8 @@ pub struct Player {}
 
 impl Plugin for PlayerPugin {
     fn build(&self, app: &mut App) {
-        app.add_startup_system(spawn_player)
-            .add_system(camera_movement);
+        app.add_startup_system(spawn_player);
+        // .add_system(camera_movement);
     }
 }
 

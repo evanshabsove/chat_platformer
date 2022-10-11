@@ -199,10 +199,12 @@ pub fn spawn_target_collision(
                     .spawn()
                     .insert(RigidBody::Fixed)
                     .insert(Transform::from_xyz(
-                        grid_coords.x as f32 * 16.0,
-                        grid_coords.y as f32 * 16.0,
+                        (grid_coords.x as f32 + 0.5) * 16.0,
+                        (grid_coords.y as f32 + 0.5) * 16.0,
                         100.0,
                     ))
+                    .insert(Collider::cuboid(16.0 / 2.0, 16.0 / 2.0))
+                    .insert(Sensor)
                     .insert(GlobalTransform::default());
             });
         });

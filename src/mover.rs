@@ -23,7 +23,7 @@ fn player_movement(
 
     if keyboard.pressed(KeyCode::W) && !mover.is_jumping {
         velocity.linvel.y = mover.speed;
-        mover.is_jumping = true;
+        // mover.is_jumping = true;
     }
 
     if keyboard.pressed(KeyCode::A) {

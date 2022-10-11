@@ -9,7 +9,9 @@ mod ascii;
 mod debug;
 mod mover;
 mod player;
+mod systems;
 mod tilemap;
+mod wall;
 
 use ascii::AsciiPlugin;
 use debug::DebugPlugin;
@@ -19,7 +21,7 @@ use tilemap::TileMapPlugin;
 
 pub const CLEAR: Color = Color::rgb(0.1, 0.1, 0.1);
 pub const RESOLUTION: f32 = 16.0 / 9.0;
-pub const TILE_SIZE: f32 = 100.0;
+pub const TILE_SIZE: f32 = 20.0;
 pub const GRAV: f32 = 3.0;
 fn main() {
     let height: f32 = 900.0;
@@ -50,13 +52,14 @@ fn main() {
         .add_startup_system(spawn_camera)
         .add_plugin(AsciiPlugin)
         .add_plugin(PlayerPugin)
-        .add_plugin(TileMapPlugin)
+        // .add_plugin(TileMapPlugin)
         .add_plugin(DebugPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugin(MoverPlugin)
         .add_plugin(RapierDebugRenderPlugin::default())
         .add_system(jump_reset)
-        .register_ldtk_entity::<MyBundle>("MyEntityIdentifier")
+        .add_system(systems::spawn_wall_collision)
+        .register_ldtk_int_cell::<wall::WallBundle>(1)
         .run();
 }
 

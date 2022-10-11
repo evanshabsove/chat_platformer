@@ -1,9 +1,9 @@
 use bevy::{prelude::*, utils::HashMap};
-use bevy_asset_loader::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 use std::collections::HashSet;
 
+use crate::target::Target;
 use crate::wall::Wall;
 
 /// Spawns heron collisions for the walls of a level
@@ -184,4 +184,27 @@ pub fn spawn_wall_collision(
             }
         });
     }
+}
+
+pub fn spawn_target_collision(
+    mut commands: Commands,
+    target_query: Query<(&GridCoords, &Parent), Added<Target>>,
+    level_query: Query<(Entity, &Handle<LdtkLevel>)>,
+) {
+    level_query.for_each(|(level_entity)| {
+        commands.entity(level_entity).with_children(|level| {
+            target_query.for_each(|(&grid_coords, parent)| {
+                // println!("Targets are here x: {} y: {}", grid_coords.x, grid_coords.y)
+                level
+                    .spawn()
+                    .insert(RigidBody::Fixed)
+                    .insert(Transform::from_xyz(
+                        grid_coords.x as f32 * 16.0,
+                        grid_coords.y as f32 * 16.0,
+                        100.0,
+                    ))
+                    .insert(GlobalTransform::default());
+            });
+        });
+    });
 }

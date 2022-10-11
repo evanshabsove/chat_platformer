@@ -10,6 +10,7 @@ mod debug;
 mod mover;
 mod player;
 mod systems;
+mod target;
 mod tilemap;
 mod wall;
 
@@ -48,7 +49,9 @@ fn main() {
         .add_plugin(RapierDebugRenderPlugin::default())
         .add_system(jump_reset)
         .add_system(systems::spawn_wall_collision)
+        .add_system(systems::spawn_target_collision)
         .register_ldtk_int_cell::<wall::WallBundle>(1)
+        .register_ldtk_int_cell::<target::TargetBundle>(2)
         .run();
 }
 

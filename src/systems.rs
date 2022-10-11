@@ -191,9 +191,9 @@ pub fn spawn_target_collision(
     target_query: Query<(&GridCoords, &Parent), Added<Target>>,
     level_query: Query<(Entity, &Handle<LdtkLevel>)>,
 ) {
-    level_query.for_each(|(level_entity)| {
+    level_query.for_each(|(level_entity, _level_handle)| {
         commands.entity(level_entity).with_children(|level| {
-            target_query.for_each(|(&grid_coords, parent)| {
+            target_query.for_each(|(&grid_coords, _parent)| {
                 // println!("Targets are here x: {} y: {}", grid_coords.x, grid_coords.y)
                 level
                     .spawn()

@@ -23,7 +23,7 @@ fn player_movement(
 
     if keyboard.pressed(KeyCode::W) && !mover.is_jumping {
         velocity.linvel.y = mover.speed;
-        // mover.is_jumping = true;
+        mover.is_jumping = true;
     }
 
     if keyboard.pressed(KeyCode::A) {
@@ -41,7 +41,7 @@ fn player_movement(
     }
 }
 
-const TARGET_TOP_SPEED: f32 = 300.0;
+const TARGET_TOP_SPEED: f32 = 100.0;
 /// clamped_input is a 0.0-1.0 value representing the user's
 /// desired percentage of top speed to hold
 ///

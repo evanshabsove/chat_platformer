@@ -17,7 +17,6 @@ use ascii::AsciiPlugin;
 use debug::DebugPlugin;
 use mover::{Mover, MoverPlugin};
 use player::PlayerPugin;
-use tilemap::TileMapPlugin;
 
 pub const CLEAR: Color = Color::rgb(0.1, 0.1, 0.1);
 pub const RESOLUTION: f32 = 16.0 / 9.0;
@@ -25,15 +24,6 @@ pub const TILE_SIZE: f32 = 20.0;
 pub const GRAV: f32 = 3.0;
 fn main() {
     let height: f32 = 900.0;
-
-    // App::new()
-    //     .insert_resource(ImageSettings::default_nearest()) // prevents blurry sprites
-    //     .add_plugins(DefaultPlugins)
-    //     .add_plugin(LdtkPlugin)
-    //     .add_startup_system(setup)
-    //     .insert_resource(LevelSelection::Index(0))
-    //     .register_ldtk_entity::<MyBundle>("MyEntityIdentifier")
-    //     .run();
 
     App::new()
         .insert_resource(ClearColor(CLEAR))
@@ -52,7 +42,6 @@ fn main() {
         .add_startup_system(spawn_camera)
         .add_plugin(AsciiPlugin)
         .add_plugin(PlayerPugin)
-        // .add_plugin(TileMapPlugin)
         .add_plugin(DebugPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugin(MoverPlugin)
@@ -64,19 +53,19 @@ fn main() {
 }
 
 fn spawn_camera(mut commands: Commands) {
-    // let camera = Camera2dBundle {
-    //     projection: OrthographicProjection {
-    //         left: -1000.0 * RESOLUTION,
-    //         right: 1000.0 * RESOLUTION,
-    //         top: 1000.0,
-    //         bottom: -1000.0,
-    //         scaling_mode: ScalingMode::None,
-    //         ..default()
-    //     },
-    //     ..default()
-    // };
+    let camera = Camera2dBundle {
+        projection: OrthographicProjection {
+            left: -100.0 * RESOLUTION,
+            right: 100.0 * RESOLUTION,
+            top: 100.0,
+            bottom: -100.0,
+            scaling_mode: ScalingMode::None,
+            ..default()
+        },
+        ..default()
+    };
 
-    commands.spawn_bundle(Camera2dBundle::default());
+    commands.spawn_bundle(camera);
 }
 
 fn jump_reset(

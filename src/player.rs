@@ -11,8 +11,8 @@ pub struct Player {}
 
 impl Plugin for PlayerPugin {
     fn build(&self, app: &mut App) {
-        app.add_startup_system(spawn_player);
-        // .add_system(camera_movement);
+        app.add_startup_system(spawn_player)
+            .add_system(camera_movement);
     }
 }
 
@@ -33,7 +33,7 @@ fn spawn_player(mut commands: Commands, ascii: Res<AsciiSheet>) {
         &ascii,
         1,
         Color::rgb(0.3, 0.3, 0.9),
-        Vec3::new(0.0, 0.0, 900.0),
+        Vec3::new(100.0, 100.0, 900.0),
     );
 
     commands
@@ -55,7 +55,7 @@ fn spawn_player(mut commands: Commands, ascii: Res<AsciiSheet>) {
         .insert(ActiveEvents::COLLISION_EVENTS)
         // .insert(LockedAxes::ROTATION_LOCKED)
         .insert(Mover {
-            speed: 350.0,
+            speed: 200.0,
             is_jumping: false,
         })
         .id();

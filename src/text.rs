@@ -45,13 +45,9 @@ fn spawn_text(mut commands: Commands, asset_server: Res<AssetServer>) {
         .insert(ScoreText);
 }
 
-fn alter_text(
-    mut commands: Commands,
-    mut text_query: Query<&mut Text, With<ScoreText>>,
-    mut target_query: Query<(&mut Target)>,
-) {
+fn alter_text(mut text_query: Query<&mut Text, With<ScoreText>>, target_query: Query<&mut Target>) {
     let mut targets = 0;
-    for target in target_query.iter() {
+    for _target in target_query.iter() {
         targets += 1;
     }
     for mut text in &mut text_query {

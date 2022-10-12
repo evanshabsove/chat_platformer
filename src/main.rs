@@ -11,6 +11,7 @@ mod mover;
 mod player;
 mod systems;
 mod target;
+mod text;
 mod tilemap;
 mod wall;
 
@@ -43,6 +44,7 @@ fn main() {
         .add_startup_system(spawn_camera)
         .add_plugin(AsciiPlugin)
         .add_plugin(PlayerPugin)
+        .add_plugin(text::TextPlugin)
         .add_plugin(DebugPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugin(MoverPlugin)

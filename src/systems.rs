@@ -187,9 +187,9 @@ pub fn spawn_wall_collision(
 
 pub fn spawn_target_collision(
     mut commands: Commands,
-    mut target_query: Query<(Entity, &mut Target)>,
+    mut target_query: Query<(Entity, &mut Target), Added<Target>>,
 ) {
-    for (target_entity, mut target) in target_query.iter_mut() {
+    for (target_entity, _target) in target_query.iter_mut() {
         commands
             .entity(target_entity)
             .insert(RigidBody::Fixed)

@@ -3,7 +3,7 @@ use bevy::{
     render::{camera::ScalingMode, texture::ImageSettings},
 };
 use bevy_ecs_ldtk::prelude::*;
-use bevy_rapier2d::prelude::*;
+use bevy_rapier2d::{prelude::*, rapier::prelude::CollisionEventFlags};
 
 mod ascii;
 mod debug;
@@ -75,9 +75,17 @@ fn jump_reset(
     mut query: Query<(Entity, &mut Mover)>,
     mut collision_events: EventReader<CollisionEvent>,
 ) {
-    for _collision_event in collision_events.iter() {
-        for (_entity, mut mover) in query.iter_mut() {
-            set_jumping_false_if_touching_floor(&mut mover);
+    for collision_event in collision_events.iter() {
+        match collision_event {
+            CollisionEvent::Started(_, _, CollisionEventFlags::SENSOR) => {
+                println!("Sensor event");
+            }
+            CollisionEvent::Started(_, _, _) => {
+                for (_entity, mut mover) in query.iter_mut() {
+                    set_jumping_false_if_touching_floor(&mut mover);
+                }
+            }
+            CollisionEvent::Stopped(_, _, _) => {}
         }
     }
 }

@@ -68,7 +68,6 @@ pub fn spawn_wall_collision(
     });
 
     if !wall_query.is_empty() {
-        println!("wall query is not empty");
         level_query.for_each(|(level_entity, level_handle)| {
             if let Some(level_walls) = level_to_wall_locations.get(&level_entity) {
                 let level = levels
@@ -188,25 +187,14 @@ pub fn spawn_wall_collision(
 
 pub fn spawn_target_collision(
     mut commands: Commands,
-    target_query: Query<(&GridCoords, &Parent), Added<Target>>,
-    level_query: Query<(Entity, &Handle<LdtkLevel>)>,
+    mut target_query: Query<(Entity, &mut Target)>,
 ) {
-    level_query.for_each(|(level_entity, _level_handle)| {
-        commands.entity(level_entity).with_children(|level| {
-            target_query.for_each(|(&grid_coords, _parent)| {
-                // println!("Targets are here x: {} y: {}", grid_coords.x, grid_coords.y)
-                level
-                    .spawn()
-                    .insert(RigidBody::Fixed)
-                    .insert(Transform::from_xyz(
-                        (grid_coords.x as f32 + 0.5) * 16.0,
-                        (grid_coords.y as f32 + 0.5) * 16.0,
-                        100.0,
-                    ))
-                    .insert(Collider::cuboid(16.0 / 2.0, 16.0 / 2.0))
-                    .insert(Sensor)
-                    .insert(GlobalTransform::default());
-            });
-        });
-    });
+    for (target_entity, mut target) in target_query.iter_mut() {
+        commands
+            .entity(target_entity)
+            .insert(RigidBody::Fixed)
+            .insert(Collider::cuboid(16.0 / 2.0, 16.0 / 2.0))
+            .insert(Sensor)
+            .insert(GlobalTransform::default());
+    }
 }

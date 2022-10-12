@@ -47,7 +47,7 @@ fn main() {
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugin(MoverPlugin)
         .add_plugin(RapierDebugRenderPlugin::default())
-        .add_system(jump_reset)
+        .add_system(collision_events)
         .add_system(systems::spawn_wall_collision)
         .add_system(systems::spawn_target_collision)
         .register_ldtk_int_cell::<wall::WallBundle>(1)
@@ -71,17 +71,18 @@ fn spawn_camera(mut commands: Commands) {
     commands.spawn_bundle(camera);
 }
 
-fn jump_reset(
-    mut query: Query<(Entity, &mut Mover)>,
+fn collision_events(
+    mut mover_query: Query<(Entity, &mut Mover)>,
     mut collision_events: EventReader<CollisionEvent>,
+    mut commands: Commands,
 ) {
     for collision_event in collision_events.iter() {
         match collision_event {
-            CollisionEvent::Started(_, _, CollisionEventFlags::SENSOR) => {
-                println!("Sensor event");
+            CollisionEvent::Started(_, entity, CollisionEventFlags::SENSOR) => {
+                commands.entity(*entity).despawn_recursive();
             }
             CollisionEvent::Started(_, _, _) => {
-                for (_entity, mut mover) in query.iter_mut() {
+                for (_entity, mut mover) in mover_query.iter_mut() {
                     set_jumping_false_if_touching_floor(&mut mover);
                 }
             }
@@ -95,8 +96,6 @@ fn set_jumping_false_if_touching_floor(mover: &mut Mover) {
 }
 
 fn spawn_map(mut commands: Commands, asset_server: Res<AssetServer>) {
-    // commands.spawn_bundle(Camera2dBundle::default());
-
     commands.spawn_bundle(LdtkWorldBundle {
         ldtk_handle: asset_server.load("map_1.ldtk"),
         ..Default::default()

@@ -57,6 +57,5 @@ fn spawn_player(mut commands: Commands, ascii: Res<AsciiSheet>) {
         .insert(Mover {
             speed: 200.0,
             is_jumping: false,
-        })
-        .id();
+        });
 }

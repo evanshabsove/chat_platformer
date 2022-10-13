@@ -9,6 +9,7 @@ mod ascii;
 mod debug;
 mod mover;
 mod player;
+mod stopwatch;
 mod systems;
 mod target;
 mod text;
@@ -45,6 +46,7 @@ fn main() {
         .add_plugin(AsciiPlugin)
         .add_plugin(PlayerPugin)
         .add_plugin(text::TextPlugin)
+        .add_plugin(stopwatch::LevelDurationPlugin)
         .add_plugin(DebugPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugin(MoverPlugin)

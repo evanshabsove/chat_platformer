@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy::time::Stopwatch;
 use bevy_inspector_egui::Inspectable;
 
 use crate::target::Target;
@@ -6,6 +7,11 @@ pub struct TextPlugin;
 
 #[derive(Component, Inspectable)]
 pub struct ScoreText;
+
+#[derive(Component)]
+pub struct DurationText {
+    pub time: Stopwatch,
+}
 
 impl Plugin for TextPlugin {
     fn build(&self, app: &mut App) {
@@ -43,6 +49,38 @@ fn spawn_text(mut commands: Commands, asset_server: Res<AssetServer>) {
             }),
         )
         .insert(ScoreText);
+
+    commands
+        .spawn_bundle(
+            // Create a TextBundle that has a Text with a single section.
+            TextBundle::from_sections([
+                TextSection::new(
+                    "Time: ",
+                    TextStyle {
+                        font: asset_server.load("fonts/BebasNeue-Regular.ttf"),
+                        font_size: 100.0,
+                        color: Color::WHITE,
+                    },
+                ),
+                TextSection::new(
+                    "00:00:00",
+                    TextStyle {
+                        font: asset_server.load("fonts/BebasNeue-Regular.ttf"),
+                        font_size: 100.0,
+                        color: Color::WHITE,
+                    },
+                ),
+            ]) // Set the alignment of the Text
+            .with_text_alignment(TextAlignment::TOP_CENTER)
+            // Set the style of the TextBundle itself.
+            .with_style(Style {
+                align_self: AlignSelf::Center,
+                ..default()
+            }),
+        )
+        .insert(DurationText {
+            time: Stopwatch::new(),
+        });
 }
 
 fn alter_text(mut text_query: Query<&mut Text, With<ScoreText>>, target_query: Query<&mut Target>) {

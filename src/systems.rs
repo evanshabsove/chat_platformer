@@ -3,9 +3,10 @@ use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
 use std::collections::HashSet;
 
-use crate::target::Target;
+use crate::target::{Target, TargetEntity};
 use crate::wall::Wall;
 
+use crate::TILE_SIZE;
 /// Spawns heron collisions for the walls of a level
 ///
 /// You could just insert a ColliderBundle in to the WallBundle,
@@ -187,14 +188,33 @@ pub fn spawn_wall_collision(
 
 pub fn spawn_target_collision(
     mut commands: Commands,
-    mut target_query: Query<(Entity, &mut Target), Added<Target>>,
+    target_query: Query<(&GridCoords, &Parent), Added<TargetEntity>>,
+    asset_server: Res<AssetServer>,
+    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    for (target_entity, _target) in target_query.iter_mut() {
+    target_query.for_each(|(&grid_coords, _parent)| {
+        let texture_handle = asset_server.load("player/Character_004.png");
+        let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(24.0, 24.0), 3, 4);
+        let texture_atlas_handle = texture_atlases.add(texture_atlas);
+
+        println!("X coords: {:?} Y coords {:?}", grid_coords.x, grid_coords.y);
         commands
-            .entity(target_entity)
+            .spawn_bundle(SpriteSheetBundle {
+                texture_atlas: texture_atlas_handle,
+                transform: Transform {
+                    translation: Vec3::new(
+                        grid_coords.x as f32 * TILE_SIZE,
+                        grid_coords.y as f32 * TILE_SIZE,
+                        100.0,
+                    ),
+                    ..Default::default()
+                },
+                ..default()
+            })
             .insert(RigidBody::Fixed)
-            .insert(Collider::cuboid(16.0 / 2.0, 16.0 / 2.0))
+            .insert(Collider::cuboid(TILE_SIZE / 2.0, TILE_SIZE / 2.0))
             .insert(Sensor)
-            .insert(GlobalTransform::default());
-    }
+            .insert(GlobalTransform::default())
+            .insert(Target);
+    });
 }

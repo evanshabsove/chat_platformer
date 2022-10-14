@@ -41,14 +41,6 @@ fn spawn_player(
 ) {
     let texture_handle = asset_server.load("player/Character_004.png");
     let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(24.0, 24.0), 3, 4);
-    // let texture_atlas = TextureAtlas::from_grid_with_padding(
-    //     texture_handle,
-    //     Vec2::splat(16.0),
-    //     3,
-    //     4,
-    //     Vec2::splat(16.0),
-    //     Vec2::splat(16.0),
-    // );
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
     commands
         .spawn_bundle(SpriteSheetBundle {

@@ -55,7 +55,7 @@ fn main() {
         .add_system(systems::spawn_wall_collision)
         .add_system(systems::spawn_target_collision)
         .register_ldtk_int_cell::<wall::WallBundle>(1)
-        .register_ldtk_int_cell::<target::TargetBundle>(2)
+        .register_ldtk_entity::<target::TargetBundle>("Target")
         .run();
 }
 

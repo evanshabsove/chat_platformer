@@ -1,10 +1,16 @@
 use bevy::prelude::*;
-use bevy_ecs_ldtk::LdtkIntCell;
+use bevy_ecs_ldtk::prelude::GridCoords;
+use bevy_ecs_ldtk::LdtkEntity;
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Default, Component)]
 pub struct Target;
 
-#[derive(Clone, Debug, Default, Bundle, LdtkIntCell)]
+#[derive(Copy, Clone, Eq, PartialEq, Debug, Default, Component)]
+pub struct TargetEntity;
+
+#[derive(Clone, Debug, Default, Bundle, LdtkEntity)]
 pub struct TargetBundle {
-    target: Target,
+    target_entity: TargetEntity,
+    #[grid_coords]
+    grid_coords: GridCoords,
 }

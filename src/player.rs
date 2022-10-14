@@ -9,6 +9,9 @@ pub struct PlayerPugin;
 #[derive(Component, Inspectable)]
 pub struct Player {}
 
+const LEFT_RUN_INDEXES: [usize; 3] = [3, 4, 5];
+const RIGHT_RUN_INDEXES: [usize; 3] = [6, 7, 8];
+
 impl Plugin for PlayerPugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system(spawn_player)
@@ -81,18 +84,28 @@ fn spawn_player(
 
 fn animate_sprite(
     time: Res<Time>,
-    texture_atlases: Res<Assets<TextureAtlas>>,
     mut query: Query<(
         &mut AnimationTimer,
         &mut TextureAtlasSprite,
         &Handle<TextureAtlas>,
     )>,
+    keyboard: Res<Input<KeyCode>>,
 ) {
     for (mut timer, mut sprite, texture_atlas_handle) in &mut query {
-        timer.tick(time.delta());
-        if timer.just_finished() {
-            let texture_atlas = texture_atlases.get(texture_atlas_handle).unwrap();
-            sprite.index = (sprite.index + 1) % texture_atlas.textures.len();
+        if keyboard.pressed(KeyCode::A) {
+            timer.tick(time.delta());
+            if timer.just_finished() {
+                // let texture_atlas = texture_atlases.get(texture_atlas_handle).unwrap();
+                sprite.index = LEFT_RUN_INDEXES[(sprite.index + 1) % LEFT_RUN_INDEXES.len()];
+            }
+        } else if keyboard.pressed(KeyCode::D) {
+            timer.tick(time.delta());
+            if timer.just_finished() {
+                // let texture_atlas = texture_atlases.get(texture_atlas_handle).unwrap();
+                sprite.index = RIGHT_RUN_INDEXES[(sprite.index + 1) % RIGHT_RUN_INDEXES.len()];
+            }
+        } else {
+            sprite.index = 0;
         }
     }
 }

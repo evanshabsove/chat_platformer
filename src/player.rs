@@ -7,16 +7,19 @@ use crate::{mover::Mover, GRAV, TILE_SIZE};
 pub struct PlayerPugin;
 
 #[derive(Component, Inspectable)]
-pub struct Player {}
+pub struct Player {
+    pub is_attacking: bool,
+}
 
-const LEFT_RUN_INDEXES: [usize; 3] = [3, 4, 5];
-const RIGHT_RUN_INDEXES: [usize; 3] = [6, 7, 8];
+const RUN_INDEXES: [usize; 3] = [0, 1, 2];
+const ATTACK_INDEXES: [usize; 3] = [3, 4, 5];
 
 impl Plugin for PlayerPugin {
     fn build(&self, app: &mut App) {
         app.add_startup_system(spawn_player)
             .add_system(camera_movement)
-            .add_system(animate_sprite);
+            .add_system(animate_sprite_movement)
+            .add_system(animate_sprite_attack);
     }
 }
 
@@ -39,8 +42,8 @@ fn spawn_player(
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    let texture_handle = asset_server.load("player/Character_004.png");
-    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(24.0, 24.0), 3, 4);
+    let texture_handle = asset_server.load("player/Character_004_Battler.png");
+    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(32.0, 32.0), 6, 9);
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
     commands
         .spawn_bundle(SpriteSheetBundle {
@@ -52,7 +55,9 @@ fn spawn_player(
             ..default()
         })
         .insert(Name::new("Player"))
-        .insert(Player {})
+        .insert(Player {
+            is_attacking: false
+        })
         .insert(RigidBody::Dynamic)
         .insert(ActiveCollisionTypes::default() | ActiveCollisionTypes::DYNAMIC_STATIC)
         .insert(Velocity {
@@ -74,30 +79,65 @@ fn spawn_player(
         .insert(AnimationTimer(Timer::from_seconds(0.1, true)));
 }
 
-fn animate_sprite(
+fn animate_sprite_movement(
     time: Res<Time>,
     mut query: Query<(
         &mut AnimationTimer,
         &mut TextureAtlasSprite,
-        &Handle<TextureAtlas>,
+        &mut Player
     )>,
     keyboard: Res<Input<KeyCode>>,
 ) {
-    for (mut timer, mut sprite, _texture_atlas_handle) in &mut query {
-        if keyboard.pressed(KeyCode::A) {
+    for (mut timer, mut sprite, player) in &mut query {
+        if !player.is_attacking {            
+            if keyboard.pressed(KeyCode::A) {
+                timer.tick(time.delta());
+                if timer.just_finished() {
+                    // let texture_atlas = texture_atlases.get(texture_atlas_handle).unwrap();
+                    sprite.flip_x = false;
+                    sprite.index = RUN_INDEXES[(sprite.index + 1) % RUN_INDEXES.len()];
+                }
+            } else if keyboard.pressed(KeyCode::D) {
+                timer.tick(time.delta());
+                if timer.just_finished() {
+                    // let texture_atlas = texture_atlases.get(texture_atlas_handle).unwrap();
+                    sprite.flip_x = true;
+                    sprite.index = RUN_INDEXES[(sprite.index + 1) % RUN_INDEXES.len()];
+                }
+            } else {
+                sprite.index = 0;
+            }
+        }
+    }
+}
+
+fn animate_sprite_attack(
+    time: Res<Time>,
+    mut query: Query<(
+        &mut AnimationTimer,
+        &mut TextureAtlasSprite,
+        &mut Player
+    )>,
+    keyboard: Res<Input<KeyCode>>,
+) {
+    for (mut timer, mut sprite, mut player) in &mut query {          
+        if keyboard.pressed(KeyCode::Space) {
+            player.is_attacking = true;
+
             timer.tick(time.delta());
             if timer.just_finished() {
-                // let texture_atlas = texture_atlases.get(texture_atlas_handle).unwrap();
-                sprite.index = LEFT_RUN_INDEXES[(sprite.index + 1) % LEFT_RUN_INDEXES.len()];
+                sprite.index = ATTACK_INDEXES[(sprite.index + 1) % ATTACK_INDEXES.len()];
             }
-        } else if keyboard.pressed(KeyCode::D) {
+        } else if player.is_attacking {
             timer.tick(time.delta());
             if timer.just_finished() {
-                // let texture_atlas = texture_atlases.get(texture_atlas_handle).unwrap();
-                sprite.index = RIGHT_RUN_INDEXES[(sprite.index + 1) % RIGHT_RUN_INDEXES.len()];
+                let index = ATTACK_INDEXES[(sprite.index + 1) % ATTACK_INDEXES.len()];
+                sprite.index = index;
+
+                if index == 5 {
+                    player.is_attacking = false;
+                }
             }
-        } else {
-            sprite.index = 0;
         }
     }
 }

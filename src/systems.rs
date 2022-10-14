@@ -193,8 +193,8 @@ pub fn spawn_target_collision(
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     target_query.for_each(|(&grid_coords, _parent)| {
-        let texture_handle = asset_server.load("player/Character_004.png");
-        let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(24.0, 24.0), 3, 4);
+        let texture_handle = asset_server.load("mystic_woods_free_v0.2/sprites/objects/chest_01.png");
+        let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(16.0, 16.0), 1, 4);
         let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
         println!("X coords: {:?} Y coords {:?}", grid_coords.x, grid_coords.y);

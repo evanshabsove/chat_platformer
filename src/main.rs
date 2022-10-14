@@ -47,7 +47,7 @@ fn main() {
         .add_plugin(PlayerPugin)
         .add_plugin(text::TextPlugin)
         .add_plugin(stopwatch::LevelDurationPlugin)
-        .add_plugin(DebugPlugin)
+        // .add_plugin(DebugPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugin(MoverPlugin)
         .add_plugin(RapierDebugRenderPlugin::default())

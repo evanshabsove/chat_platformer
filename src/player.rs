@@ -74,7 +74,7 @@ fn spawn_player(
         .insert(Collider::cuboid(TILE_SIZE / 2.0, (TILE_SIZE / 2.0) + 4.0))
         .insert(GravityScale(GRAV))
         .insert(ActiveEvents::COLLISION_EVENTS)
-        // .insert(LockedAxes::ROTATION_LOCKED)
+        .insert(LockedAxes::ROTATION_LOCKED)
         .insert(Mover {
             speed: 200.0,
             is_jumping: false,

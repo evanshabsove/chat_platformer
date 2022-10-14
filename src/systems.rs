@@ -154,7 +154,6 @@ pub fn spawn_wall_collision(
                     // Making the collider a child of the level serves two purposes:
                     // 1. Adjusts the transforms to be relative to the level for free
                     // 2. the colliders will be despawned automatically when levels unload
-                    println!("wall query is not empty");
                     for wall_rect in wall_rects {
                         level
                             .spawn()
@@ -197,7 +196,6 @@ pub fn spawn_target_collision(
         let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(16.0, 16.0), 1, 4);
         let texture_atlas_handle = texture_atlases.add(texture_atlas);
 
-        println!("X coords: {:?} Y coords {:?}", grid_coords.x, grid_coords.y);
         commands
             .spawn_bundle(SpriteSheetBundle {
                 texture_atlas: texture_atlas_handle,

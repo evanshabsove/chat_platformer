@@ -50,7 +50,7 @@ fn main() {
         // .add_plugin(DebugPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugin(MoverPlugin)
-        .add_plugin(RapierDebugRenderPlugin::default())
+        // .add_plugin(RapierDebugRenderPlugin::default())
         .add_system(collision_events)
         .add_system(systems::spawn_wall_collision)
         .add_system(systems::spawn_target_collision)

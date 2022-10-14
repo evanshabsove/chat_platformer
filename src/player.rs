@@ -83,7 +83,7 @@ fn animate_sprite(
     )>,
     keyboard: Res<Input<KeyCode>>,
 ) {
-    for (mut timer, mut sprite, texture_atlas_handle) in &mut query {
+    for (mut timer, mut sprite, _texture_atlas_handle) in &mut query {
         if keyboard.pressed(KeyCode::A) {
             timer.tick(time.delta());
             if timer.just_finished() {

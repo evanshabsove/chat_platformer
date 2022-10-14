@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_inspector_egui::Inspectable;
 use bevy_rapier2d::prelude::*;
 
-use crate::{ascii::spawn_ascii_sprite, ascii::AsciiSheet, mover::Mover, GRAV, TILE_SIZE};
+use crate::{mover::Mover, GRAV, TILE_SIZE};
 
 pub struct PlayerPugin;
 
@@ -27,17 +27,23 @@ fn camera_movement(
     camera_transform.translation.y = player_transform.translation.y;
 }
 
-fn spawn_player(mut commands: Commands, ascii: Res<AsciiSheet>) {
-    let player = spawn_ascii_sprite(
-        &mut commands,
-        &ascii,
-        1,
-        Color::rgb(0.3, 0.3, 0.9),
-        Vec3::new(100.0, 100.0, 900.0),
-    );
-
+fn spawn_player(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+) {
+    let texture_handle = asset_server.load("player/Character_004.png");
+    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(16.0, 30.0), 3, 4);
+    let texture_atlas_handle = texture_atlases.add(texture_atlas);
     commands
-        .entity(player)
+        .spawn_bundle(SpriteSheetBundle {
+            texture_atlas: texture_atlas_handle,
+            transform: Transform {
+                translation: Vec3::new(100.0, 100.0, 900.0),
+                ..Default::default()
+            },
+            ..default()
+        })
         .insert(Name::new("Player"))
         .insert(Player {})
         .insert(RigidBody::Dynamic)

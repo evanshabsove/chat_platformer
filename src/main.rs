@@ -6,6 +6,7 @@ use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::{prelude::*, rapier::prelude::CollisionEventFlags};
 
 mod ascii;
+mod attacker;
 mod debug;
 mod mover;
 mod player;
@@ -16,10 +17,11 @@ mod text;
 mod tilemap;
 mod wall;
 
+use attacker::Attacker;
 use ascii::AsciiPlugin;
 use debug::DebugPlugin;
 use mover::{Mover, MoverPlugin};
-use player::PlayerPugin;
+use player::{Player, PlayerPugin};
 
 pub const CLEAR: Color = Color::rgb(0.1, 0.1, 0.1);
 pub const RESOLUTION: f32 = 16.0 / 9.0;
@@ -50,7 +52,7 @@ fn main() {
         // .add_plugin(DebugPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugin(MoverPlugin)
-        // .add_plugin(RapierDebugRenderPlugin::default())
+        .add_plugin(RapierDebugRenderPlugin::default())
         .add_system(collision_events)
         .add_system(systems::spawn_wall_collision)
         .add_system(systems::spawn_target_collision)
@@ -79,11 +81,14 @@ fn collision_events(
     mut mover_query: Query<(Entity, &mut Mover)>,
     mut collision_events: EventReader<CollisionEvent>,
     mut commands: Commands,
+    player_query: Query<&mut Player, With<Attacker>>
 ) {
     for collision_event in collision_events.iter() {
         match collision_event {
             CollisionEvent::Started(_, entity, CollisionEventFlags::SENSOR) => {
-                commands.entity(*entity).despawn_recursive();
+                for _player in player_query.iter() {
+                    commands.entity(*entity).despawn_recursive();
+                }
             }
             CollisionEvent::Started(_, _, _) => {
                 for (_entity, mut mover) in mover_query.iter_mut() {

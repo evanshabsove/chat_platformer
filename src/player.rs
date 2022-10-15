@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_inspector_egui::Inspectable;
 use bevy_rapier2d::prelude::*;
 
-use crate::{mover::Mover, GRAV, TILE_SIZE};
+use crate::{mover::Mover, attacker::Attacker, GRAV, TILE_SIZE};
 
 pub struct PlayerPugin;
 
@@ -19,7 +19,8 @@ impl Plugin for PlayerPugin {
         app.add_startup_system(spawn_player)
             .add_system(camera_movement)
             .add_system(animate_sprite_movement)
-            .add_system(animate_sprite_attack);
+            .add_system(animate_sprite_attack)
+            .add_system(spawn_hit_box);
     }
 }
 
@@ -68,10 +69,10 @@ fn spawn_player(
             force: Vec2::new(0.0, 0.0),
             torque: 0.0,
         })
-        .insert(Collider::cuboid(TILE_SIZE / 2.0, (TILE_SIZE / 2.0) + 4.0))
         .insert(GravityScale(GRAV))
         .insert(ActiveEvents::COLLISION_EVENTS)
         .insert(LockedAxes::ROTATION_LOCKED)
+        .insert(Collider::cuboid(TILE_SIZE / 2.0, (TILE_SIZE / 2.0) + 4.0))
         .insert(Mover {
             speed: 200.0,
             is_jumping: false,
@@ -138,6 +139,20 @@ fn animate_sprite_attack(
                     player.is_attacking = false;
                 }
             }
+        }
+    }
+}
+
+fn spawn_hit_box(
+    mut commands: Commands,
+    mut query: Query<(Entity, &mut Player)>
+) {
+    for (entity, mut player) in query.iter_mut() {
+        let mut player_entity = commands.entity(entity);
+        if player.is_attacking {
+            player_entity.insert(Attacker);
+        } else {
+            player_entity.remove::<Attacker>();
         }
     }
 }

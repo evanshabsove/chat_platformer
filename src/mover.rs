@@ -1,4 +1,4 @@
-use crate::player::Player;
+use crate::{player::Player, AppState};
 use bevy::prelude::*;
 use bevy_rapier2d::prelude::{ExternalForce, Velocity};
 pub struct MoverPlugin;
@@ -11,13 +11,17 @@ pub struct Mover {
 
 impl Plugin for MoverPlugin {
     fn build(&self, app: &mut App) {
-        app.add_system(player_movement.label("movement"));
+        app
+        .add_system_set(
+            SystemSet::on_update(AppState::Level1)
+                .with_system(player_movement.label("movement"))
+        );
     }
 }
 
 fn player_movement(
     mut player_query: Query<(&mut Mover, &mut Velocity, &mut ExternalForce), With<Player>>,
-    keyboard: Res<Input<KeyCode>>,
+    mut keyboard: ResMut<Input<KeyCode>>,
 ) {
     let (mut mover, mut velocity, mut force) = player_query.single_mut();
 

@@ -95,6 +95,7 @@ fn collision_events(
     mut commands: Commands,
     mut target_query: Query<(Entity, &mut Target)>,
     mut level_select_query: Query<(Entity, &mut LevelSelect)>,
+    mut level_selection: ResMut<LevelSelection>,
     player_query: Query<&mut Player, With<Attacker>>
 ) {
     for collision_event in collision_events.iter() {
@@ -109,7 +110,7 @@ fn collision_events(
                 for (level_select_entity, level_select) in level_select_query.iter_mut() {
                     if entity.id() == level_select_entity.id() {
                         println!("Level Select hit! {:?}", level_select.level);
-                        LevelSelection::Index(0);
+                        *level_selection = LevelSelection::Index(level_select.level as usize);
                     }
                 }
             }

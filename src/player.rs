@@ -24,7 +24,7 @@ impl Plugin for PlayerPugin {
             SystemSet::on_enter(AppState::MainMenu).with_system(hide_player)
         )
         .add_system_set(
-            SystemSet::on_update(AppState::Level1)
+            SystemSet::on_update(AppState::MainMenu)
                 .with_system(camera_movement)
                 .with_system(animate_sprite_movement)
                 .with_system(animate_sprite_attack)
@@ -88,7 +88,8 @@ fn spawn_player(
             speed: 200.0,
             is_jumping: false,
         })
-        .insert(AnimationTimer(Timer::from_seconds(0.1, true)));
+        .insert(AnimationTimer(Timer::from_seconds(0.1, true)))
+        .insert(Attacker);
 }
 
 fn hide_player(
@@ -195,9 +196,9 @@ fn spawn_hit_box(
     for (entity, mut player) in query.iter_mut() {
         let mut player_entity = commands.entity(entity);
         if player.is_attacking {
-            player_entity.insert(Attacker);
+            // player_entity.insert(Attacker);
         } else {
-            player_entity.remove::<Attacker>();
+            // player_entity.remove::<Attacker>();
         }
     }
 }

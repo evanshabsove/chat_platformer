@@ -8,6 +8,7 @@ use bevy_rapier2d::{prelude::*, rapier::prelude::CollisionEventFlags};
 mod ascii;
 mod attacker;
 mod debug;
+mod level_select;
 mod mover;
 mod player;
 mod stopwatch;
@@ -20,8 +21,10 @@ mod wall;
 use attacker::Attacker;
 use ascii::AsciiPlugin;
 use debug::DebugPlugin;
+use level_select::LevelSelect;
 use mover::{Mover, MoverPlugin};
 use player::{Player, PlayerPugin};
+use target::Target;
 
 pub const CLEAR: Color = Color::rgb(0.1, 0.1, 0.1);
 pub const RESOLUTION: f32 = 16.0 / 9.0;
@@ -37,7 +40,7 @@ fn main() {
     let height: f32 = 900.0;
 
     App::new()
-        .add_state(AppState::Level1)
+        .add_state(AppState::MainMenu)
         .insert_resource(ClearColor(CLEAR))
         .insert_resource(WindowDescriptor {
             width: height * RESOLUTION,
@@ -47,10 +50,7 @@ fn main() {
             ..Default::default()
         })
         .insert_resource(ImageSettings::default_nearest())
-        .insert_resource(LevelSelection::Index(0))
-        .add_system_set(
-            SystemSet::on_enter(AppState::MainMenu)
-        )
+        .insert_resource(LevelSelection::Index(1))
         .add_plugins(DefaultPlugins)
         .add_plugin(LdtkPlugin)
         .add_startup_system(spawn_map)
@@ -66,8 +66,10 @@ fn main() {
         .add_system(collision_events)
         .add_system(systems::spawn_wall_collision)
         .add_system(systems::spawn_target_collision)
+        .add_system(systems::spawn_level_select)
         .register_ldtk_int_cell::<wall::WallBundle>(1)
         .register_ldtk_entity::<target::TargetBundle>("Target")
+        .register_ldtk_entity::<level_select::LevelSelectBundle>("Level_Select")
         .run();
 }
 
@@ -91,13 +93,24 @@ fn collision_events(
     mut mover_query: Query<(Entity, &mut Mover)>,
     mut collision_events: EventReader<CollisionEvent>,
     mut commands: Commands,
+    mut target_query: Query<(Entity, &mut Target)>,
+    mut level_select_query: Query<(Entity, &mut LevelSelect)>,
     player_query: Query<&mut Player, With<Attacker>>
 ) {
     for collision_event in collision_events.iter() {
         match collision_event {
             CollisionEvent::Started(_, entity, CollisionEventFlags::SENSOR) => {
-                for _player in player_query.iter() {
-                    commands.entity(*entity).despawn_recursive();
+                for (target_entity, _target) in target_query.iter_mut() {
+                    if entity.id() == target_entity.id() {
+                        commands.entity(*entity).despawn_recursive();
+                    }
+                }
+
+                for (level_select_entity, level_select) in level_select_query.iter_mut() {
+                    if entity.id() == level_select_entity.id() {
+                        println!("Level Select hit! {:?}", level_select.level);
+                        LevelSelection::Index(0);
+                    }
                 }
             }
             CollisionEvent::Started(_, _, _) => {

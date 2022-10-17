@@ -5,6 +5,7 @@ use std::collections::HashSet;
 
 use crate::target::{Target, TargetEntity};
 use crate::wall::Wall;
+use crate::level_select::{LevelSelect, LevelSelectEntity};
 
 use crate::TILE_SIZE;
 /// Spawns heron collisions for the walls of a level
@@ -214,5 +215,40 @@ pub fn spawn_target_collision(
             .insert(Sensor)
             .insert(GlobalTransform::default())
             .insert(Target);
+    });
+}
+
+pub fn spawn_level_select(
+    mut commands: Commands,
+    level_select_query: Query<(&GridCoords, &LevelSelectEntity), With<LevelSelectEntity>>,
+    asset_server: Res<AssetServer>,
+    mut texture_atlases: ResMut<Assets<TextureAtlas>>,
+) {
+    level_select_query.for_each(|(&grid_coords, level_select_entity)| {
+        // println!("Parent: {:?}", level_select_entity.level);
+        let texture_handle = asset_server.load("mystic_woods_free_v0.2/sprites/objects/chest_01.png");
+        let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(16.0, 16.0), 1, 4);
+        let texture_atlas_handle = texture_atlases.add(texture_atlas);
+
+        commands
+            .spawn_bundle(SpriteSheetBundle {
+                texture_atlas: texture_atlas_handle,
+                transform: Transform {
+                    translation: Vec3::new(
+                        grid_coords.x as f32 * TILE_SIZE,
+                        grid_coords.y as f32 * TILE_SIZE,
+                        100.0,
+                    ),
+                    ..Default::default()
+                },
+                ..default()
+            })
+            .insert(RigidBody::Fixed)
+            .insert(Collider::cuboid(TILE_SIZE / 2.0, TILE_SIZE / 2.0))
+            .insert(Sensor)
+            .insert(GlobalTransform::default())
+            .insert(LevelSelect {
+                level: level_select_entity.level
+            });
     });
 }

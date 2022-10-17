@@ -13,7 +13,7 @@ impl Plugin for MoverPlugin {
     fn build(&self, app: &mut App) {
         app
         .add_system_set(
-            SystemSet::on_update(AppState::Level1)
+            SystemSet::on_update(AppState::MainMenu)
                 .with_system(player_movement.label("movement"))
         );
     }

@@ -9,6 +9,7 @@ mod ascii;
 mod attacker;
 mod debug;
 mod level_select;
+mod finish_screen;
 mod mover;
 mod player;
 mod stopwatch;
@@ -21,6 +22,7 @@ mod wall;
 use attacker::Attacker;
 use ascii::AsciiPlugin;
 use debug::DebugPlugin;
+use finish_screen::FinishScreenPlugin;
 use level_select::LevelSelect;
 use mover::{Mover, MoverPlugin};
 use player::{Player, PlayerPugin};
@@ -63,6 +65,7 @@ fn main() {
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugin(MoverPlugin)
         .add_plugin(RapierDebugRenderPlugin::default())
+        .add_plugin(FinishScreenPlugin)
         .add_system(collision_events)
         .add_system(systems::spawn_wall_collision)
         .add_system(systems::spawn_target_collision)
@@ -73,20 +76,23 @@ fn main() {
         .run();
 }
 
+#[derive(Component)]
+pub struct MainCamera;
+
 fn spawn_camera(mut commands: Commands) {
     let camera = Camera2dBundle {
-        projection: OrthographicProjection {
-            left: -100.0 * RESOLUTION,
-            right: 100.0 * RESOLUTION,
-            top: 100.0,
-            bottom: -100.0,
-            scaling_mode: ScalingMode::None,
-            ..default()
-        },
+        // projection: OrthographicProjection {
+        //     left: -100.0 * RESOLUTION,
+        //     right: 100.0 * RESOLUTION,
+        //     top: 100.0,
+        //     bottom: -100.0,
+        //     scaling_mode: ScalingMode::None,
+        //     ..default()
+        // },
         ..default()
     };
 
-    commands.spawn_bundle(camera);
+    commands.spawn_bundle(camera).insert(MainCamera);
 }
 
 fn collision_events(

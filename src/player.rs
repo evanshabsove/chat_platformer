@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_inspector_egui::Inspectable;
 use bevy_rapier2d::prelude::*;
 
-use crate::{mover::Mover, attacker::Attacker, GRAV, TILE_SIZE};
+use crate::{mover::Mover, attacker::Attacker, GRAV, TILE_SIZE, MainCamera};
 
 pub struct PlayerPugin;
 
@@ -30,7 +30,7 @@ struct AnimationTimer(Timer);
 
 fn camera_movement(
     player_query: Query<&Transform, With<Player>>,
-    mut camera_query: Query<&mut Transform, (With<Camera>, Without<Player>)>,
+    mut camera_query: Query<&mut Transform, (With<MainCamera>, Without<Player>)>,
 ) {
     let player_transform = player_query.single();
     let mut camera_transform = camera_query.single_mut();

@@ -1,4 +1,4 @@
-use bevy::{prelude::*, log::Level};
+use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Default, Component)]

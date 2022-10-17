@@ -33,14 +33,14 @@ pub const GRAV: f32 = 3.0;
 
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 enum AppState {
-    MainMenu,
+    OverWorld,
     Level1
 }
 fn main() {
     let height: f32 = 900.0;
 
     App::new()
-        .add_state(AppState::MainMenu)
+        .add_state(AppState::OverWorld)
         .insert_resource(ClearColor(CLEAR))
         .insert_resource(WindowDescriptor {
             width: height * RESOLUTION,
@@ -96,7 +96,7 @@ fn collision_events(
     mut target_query: Query<(Entity, &mut Target)>,
     mut level_select_query: Query<(Entity, &mut LevelSelect)>,
     mut level_selection: ResMut<LevelSelection>,
-    player_query: Query<&mut Player, With<Attacker>>
+    mut player_query: Query<&mut Transform, With<Player>>,
 ) {
     for collision_event in collision_events.iter() {
         match collision_event {
@@ -109,8 +109,10 @@ fn collision_events(
 
                 for (level_select_entity, level_select) in level_select_query.iter_mut() {
                     if entity.id() == level_select_entity.id() {
-                        println!("Level Select hit! {:?}", level_select.level);
                         *level_selection = LevelSelection::Index(level_select.level as usize);
+                        let mut player_transform = player_query.single_mut();
+                        player_transform.translation.x = 100.0;
+                        player_transform.translation.y = 100.0;
                     }
                 }
             }

@@ -220,7 +220,7 @@ pub fn spawn_target_collision(
 
 pub fn spawn_level_select(
     mut commands: Commands,
-    level_select_query: Query<(&GridCoords, &LevelSelectEntity), With<LevelSelectEntity>>,
+    level_select_query: Query<(&GridCoords, &LevelSelectEntity), Added<LevelSelectEntity>>,
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {

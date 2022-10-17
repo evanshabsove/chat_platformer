@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_inspector_egui::Inspectable;
 use bevy_rapier2d::prelude::*;
 
-use crate::{mover::Mover, attacker::Attacker, GRAV, TILE_SIZE};
+use crate::{mover::Mover, attacker::Attacker, GRAV, TILE_SIZE, AppState};
 
 pub struct PlayerPugin;
 
@@ -16,11 +16,22 @@ const ATTACK_INDEXES: [usize; 3] = [3, 4, 5];
 
 impl Plugin for PlayerPugin {
     fn build(&self, app: &mut App) {
-        app.add_startup_system(spawn_player)
-            .add_system(camera_movement)
-            .add_system(animate_sprite_movement)
-            .add_system(animate_sprite_attack)
-            .add_system(spawn_hit_box);
+        app
+        .add_system_set(
+            SystemSet::on_exit(AppState::MainMenu).with_system(show_player)
+        )
+        .add_system_set(
+            SystemSet::on_enter(AppState::MainMenu).with_system(hide_player)
+        )
+        .add_system_set(
+            SystemSet::on_update(AppState::Level1)
+                .with_system(camera_movement)
+                .with_system(animate_sprite_movement)
+                .with_system(animate_sprite_attack)
+                .with_system(spawn_hit_box)
+        )
+        .add_startup_system(spawn_player)
+        .add_system(open_menu);
     }
 }
 
@@ -78,6 +89,40 @@ fn spawn_player(
             is_jumping: false,
         })
         .insert(AnimationTimer(Timer::from_seconds(0.1, true)));
+}
+
+fn hide_player(
+    mut player_query: Query<&mut Visibility, With<Player>>,
+    children_query: Query<&Children, With<Player>>,
+    mut children_visibility_query: Query<&mut Visibility, Without<Player>>
+) {
+    let mut player_vis = player_query.single_mut();
+    player_vis.is_visible = false;
+
+    if let Ok(children) = children_query.get_single() {
+        for child in children.iter() {
+            if let Ok(mut child_vis) = children_visibility_query.get_mut(*child) {
+                child_vis.is_visible = false;
+            }
+        }
+    }
+}
+
+fn show_player(
+    mut player_query: Query<&mut Visibility, With<Player>>,
+    children_query: Query<&Children, With<Player>>,
+    mut children_visibility_query: Query<&mut Visibility, Without<Player>>
+) {
+    let mut player_vis = player_query.single_mut();
+    player_vis.is_visible = true;
+
+    if let Ok(children) = children_query.get_single() {
+        for child in children.iter() {
+            if let Ok(mut child_vis) = children_visibility_query.get_mut(*child) {
+                child_vis.is_visible = true;
+            }
+        }
+    }
 }
 
 fn animate_sprite_movement(
@@ -154,5 +199,24 @@ fn spawn_hit_box(
         } else {
             player_entity.remove::<Attacker>();
         }
+    }
+}
+
+fn open_menu(
+    mut keyboard: ResMut<Input<KeyCode>>,
+    mut state: ResMut<State<AppState>>,
+) {
+    if keyboard.just_pressed(KeyCode::Return) {
+        match state.current() {
+            AppState::MainMenu => {
+                println!("Changing to main menu");
+                state.set(AppState::Level1).expect("Failed to change states")
+            },
+            AppState::Level1 => {
+                println!("Changing to Level1");
+                state.set(AppState::MainMenu).expect("Failed to change states")
+            },
+        }
+        keyboard.clear();
     }
 }

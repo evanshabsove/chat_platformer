@@ -4,6 +4,7 @@ use bevy::{
 };
 use bevy_ecs_ldtk::prelude::*;
 use bevy_rapier2d::prelude::*;
+use bevy_kira_audio::prelude::*;
 
 mod attacker;
 mod collisions;
@@ -52,8 +53,10 @@ fn main() {
         .insert_resource(LevelSelection::Index(1))
         .add_plugins(DefaultPlugins)
         .add_plugin(LdtkPlugin)
+        .add_plugin(AudioPlugin)
         .add_startup_system(spawn_map)
         .add_startup_system(spawn_camera)
+        .add_startup_system(play_background_music)
         .add_plugin(PlayerPugin)
         .add_plugin(DebugPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
@@ -97,4 +100,9 @@ fn spawn_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         ldtk_handle: asset_server.load("map_1.ldtk"),
         ..Default::default()
     });
+}
+
+fn play_background_music(asset_server: Res<AssetServer>, audio: Res<Audio>) {
+    let music = asset_server.load("music/tell_me_you_know.mp3");
+    audio.play(music).looped();
 }

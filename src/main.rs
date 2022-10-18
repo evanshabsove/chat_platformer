@@ -36,7 +36,8 @@ pub const GRAV: f32 = 3.0;
 #[derive(Debug, Clone, Eq, PartialEq, Hash)]
 enum AppState {
     OverWorld,
-    Level1
+    Level1,
+    FinishScreen
 }
 fn main() {
     let height: f32 = 900.0;
@@ -103,6 +104,7 @@ fn collision_events(
     mut level_select_query: Query<(Entity, &mut LevelSelect)>,
     mut level_selection: ResMut<LevelSelection>,
     mut player_query: Query<&mut Transform, With<Player>>,
+    mut app_state: ResMut<State<AppState>>,
 ) {
     for collision_event in collision_events.iter() {
         match collision_event {
@@ -117,6 +119,7 @@ fn collision_events(
                     if entity.id() == level_select_entity.id() {
                         *level_selection = LevelSelection::Index(level_select.level as usize);
                         let mut player_transform = player_query.single_mut();
+                        app_state.set(AppState::Level1);
                         player_transform.translation.x = 100.0;
                         player_transform.translation.y = 100.0;
                     }

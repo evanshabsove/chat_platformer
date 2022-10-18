@@ -1,6 +1,6 @@
 use bevy::prelude::*;
 
-use crate::{target::Target, text::DurationText};
+use crate::{target::Target, text::DurationText, AppState};
 
 pub struct LevelDurationPlugin;
 
@@ -14,6 +14,7 @@ fn check_level_duration(
     time: Res<Time>,
     mut text_query: Query<(&mut Text, &mut DurationText)>,
     target_query: Query<&mut Target>,
+    mut app_state: ResMut<State<AppState>>,
 ) {
     let mut targets = 0;
     for _target in target_query.iter() {

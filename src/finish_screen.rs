@@ -1,10 +1,18 @@
 use bevy::prelude::*;
+use bevy_inspector_egui::Inspectable;
+
+use crate::AppState;
 
 pub struct FinishScreenPlugin;
 
+#[derive(Component, Inspectable)]
+pub struct FinishScreen;
+
 impl Plugin for FinishScreenPlugin {
   fn build(&self, app: &mut App) {
-    app.add_startup_system(setup_finish_screen);
+    app
+      .add_system_set(SystemSet::on_enter(AppState::FinishScreen).with_system(setup_finish_screen))
+      .add_system_set(SystemSet::on_exit(AppState::FinishScreen).with_system(remove_finish_screen));
   }
 }
 
@@ -43,5 +51,12 @@ fn setup_finish_screen(mut commands: Commands,  asset_server: Res<AssetServer>) 
                 ..default()
             }),
         );
-  });
+  })
+  .insert(FinishScreen);
+}
+
+fn remove_finish_screen(mut commands: Commands, finish_screen_query: Query<Entity, With<FinishScreen>>) {
+  let finish_screen_entity = finish_screen_query.single();
+
+  commands.entity(finish_screen_entity).despawn_recursive()
 }

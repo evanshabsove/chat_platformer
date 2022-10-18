@@ -30,7 +30,6 @@ impl LdtkEntity for LevelSelectEntity {
         _: &AssetServer,
         _: &mut Assets<TextureAtlas>,
     ) -> LevelSelectEntity {
-        println!("LevelSelect added, here are some facts:");
         let mut level_value = 0;
         for field_instance in &entity_instance.field_instances {
           match field_instance.value {

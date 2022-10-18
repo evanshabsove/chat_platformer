@@ -100,6 +100,7 @@ fn animate_sprite_movement(
         &mut TextureAtlasSprite,
         &mut Player
     )>,
+
     keyboard: Res<Input<KeyCode>>,
 ) {
     for (mut timer, mut sprite, player) in &mut query {
@@ -163,6 +164,7 @@ fn spawn_hit_box(
     mut commands: Commands,
     mut query: Query<(Entity, &mut Player)>,
     mut player_query: Query<&mut Transform, With<Player>>,
+    mut player_sprite: Query<&mut TextureAtlasSprite, With<Player>>,
     mut sword_query: Query<(Entity, &mut Sword)>,
 ) {
     for (entity, mut player) in query.iter_mut() {
@@ -171,13 +173,22 @@ fn spawn_hit_box(
             swords += 1;
         }
 
+        let mut sprite = player_sprite.single_mut();
+
         if player.is_attacking && swords == 0 {
             let mut player_transform = player_query.single_mut();
+
+            let mut a_vec = Vec2::new(TILE_SIZE, TILE_SIZE);
+            let mut b_vec = Vec2::new(TILE_SIZE / 2.0, TILE_SIZE / 2.0);
+            if !sprite.flip_x {
+                a_vec = Vec2::new(-TILE_SIZE, TILE_SIZE);
+                b_vec = Vec2::new(-(TILE_SIZE / 2.0), TILE_SIZE / 2.0);
+            }
             
             commands.entity(entity).with_children(|parent| {
                 parent.spawn()
                 .insert(Sword)
-                .insert(Collider::capsule(Vec2::new(TILE_SIZE, TILE_SIZE), Vec2::new(TILE_SIZE / 2.0, TILE_SIZE / 2.0), TILE_SIZE / 2.0))
+                .insert(Collider::capsule(a_vec, b_vec, TILE_SIZE / 2.0))
                 .insert(ActiveEvents::COLLISION_EVENTS)
                 .insert_bundle(
                     TransformBundle {

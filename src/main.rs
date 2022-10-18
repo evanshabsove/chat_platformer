@@ -142,18 +142,3 @@ fn spawn_map(mut commands: Commands, asset_server: Res<AssetServer>) {
         ..Default::default()
     });
 }
-
-#[derive(Default, Component)]
-struct ComponentA;
-
-#[derive(Default, Component)]
-struct ComponentB;
-
-#[derive(Bundle, LdtkEntity)]
-pub struct MyBundle {
-    a: ComponentA,
-    b: ComponentB,
-    #[sprite_sheet_bundle]
-    #[bundle]
-    sprite_bundle: SpriteSheetBundle,
-}

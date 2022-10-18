@@ -1,5 +1,5 @@
 use bevy::prelude::*;
-use bevy_ecs_ldtk::prelude::GridCoords;
+use bevy_ecs_ldtk::{prelude::GridCoords, LevelSelection};
 use bevy_ecs_ldtk::LdtkEntity;
 use crate::{text::DurationText, AppState};
 
@@ -56,6 +56,8 @@ fn display_end_screen(
     mut app_state: ResMut<State<AppState>>,
     mut target_destroyed_event: EventReader<TargetDestroyedEvent>,
     target_query: Query<&mut Target>,
+    mut level_selection: ResMut<LevelSelection>,
+    keyboard: Res<Input<KeyCode>>,
 ) {
     for _event in target_destroyed_event.iter() {
         let mut targets = 0;
@@ -66,6 +68,30 @@ fn display_end_screen(
         if targets == 0 {
             match app_state.current() {
                 AppState::Level1 => {
+                    app_state.set(AppState::Level2);
+                    *level_selection = LevelSelection::Index(2);
+                },
+                AppState::Level2 => {
+                    app_state.set(AppState::FinishScreen);
+                },
+                _ => {}
+            }
+        }
+    }
+
+    if keyboard.pressed(KeyCode::N) {
+        let mut targets = 0;
+        for _target in target_query.iter() {
+            targets += 1;
+        }
+
+        if targets == 0 {
+            match app_state.current() {
+                AppState::Level1 => {
+                    app_state.set(AppState::Level2);
+                    *level_selection = LevelSelection::Index(2);
+                },
+                AppState::Level2 => {
                     app_state.set(AppState::FinishScreen);
                 },
                 _ => {}

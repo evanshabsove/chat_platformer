@@ -32,6 +32,7 @@ pub const GRAV: f32 = 3.0;
 enum AppState {
     OverWorld,
     Level1,
+    Level2,
     FinishScreen
 }
 fn main() {

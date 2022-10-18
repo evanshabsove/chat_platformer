@@ -83,14 +83,14 @@ pub struct MainCamera;
 
 fn spawn_camera(mut commands: Commands) {
     let camera = Camera2dBundle {
-        // projection: OrthographicProjection {
-        //     left: -100.0 * RESOLUTION,
-        //     right: 100.0 * RESOLUTION,
-        //     top: 100.0,
-        //     bottom: -100.0,
-        //     scaling_mode: ScalingMode::None,
-        //     ..default()
-        // },
+        projection: OrthographicProjection {
+            left: -100.0 * RESOLUTION,
+            right: 100.0 * RESOLUTION,
+            top: 100.0,
+            bottom: -100.0,
+            scaling_mode: ScalingMode::None,
+            ..default()
+        },
         ..default()
     };
 

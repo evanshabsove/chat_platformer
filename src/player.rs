@@ -2,7 +2,7 @@ use bevy::prelude::*;
 use bevy_inspector_egui::Inspectable;
 use bevy_rapier2d::prelude::*;
 
-use crate::{mover::Mover, attacker::Attacker, GRAV, TILE_SIZE, MainCamera};
+use crate::{mover::Mover, attacker::Attacker, GRAV, TILE_SIZE, MainCamera, AppState};
 
 pub struct PlayerPugin;
 
@@ -21,7 +21,9 @@ impl Plugin for PlayerPugin {
         .add_system(camera_movement)
         .add_system(animate_sprite_movement)
         .add_system(animate_sprite_attack)
-        .add_system(spawn_hit_box);
+        .add_system(spawn_hit_box)
+        .add_system_set(SystemSet::on_enter(AppState::OverWorld).with_system(move_player_to_spawn))
+        .add_system_set(SystemSet::on_enter(AppState::Level1).with_system(move_player_to_spawn));
     }
 }
 
@@ -37,6 +39,15 @@ fn camera_movement(
 
     camera_transform.translation.x = player_transform.translation.x;
     camera_transform.translation.y = player_transform.translation.y;
+}
+
+fn move_player_to_spawn(
+    mut player_query: Query<&mut Transform, With<Player>>,
+) {
+    let mut player_transform = player_query.single_mut();
+    
+    player_transform.translation.x = 100.0;
+    player_transform.translation.y = 100.0;
 }
 
 fn spawn_player(

@@ -12,7 +12,6 @@ mod level_select;
 mod finish_screen;
 mod mover;
 mod player;
-mod stopwatch;
 mod systems;
 mod target;
 mod text;
@@ -103,7 +102,6 @@ fn collision_events(
     mut target_query: Query<(Entity, &mut Target)>,
     mut level_select_query: Query<(Entity, &mut LevelSelect)>,
     mut level_selection: ResMut<LevelSelection>,
-    mut player_query: Query<&mut Transform, With<Player>>,
     mut app_state: ResMut<State<AppState>>,
     mut target_destroyed_event: EventWriter<TargetDestroyedEvent>
 ) {
@@ -120,10 +118,7 @@ fn collision_events(
                 for (level_select_entity, level_select) in level_select_query.iter_mut() {
                     if entity.id() == level_select_entity.id() {
                         *level_selection = LevelSelection::Index(level_select.level as usize);
-                        let mut player_transform = player_query.single_mut();
                         app_state.set(AppState::Level1);
-                        player_transform.translation.x = 100.0;
-                        player_transform.translation.y = 100.0;
                     }
                 }
             }

@@ -156,16 +156,29 @@ fn animate_sprite_attack(
     }
 }
 
+#[derive(Component, Inspectable)]
+pub struct Sword;
+
 fn spawn_hit_box(
     mut commands: Commands,
-    mut query: Query<(Entity, &mut Player)>
+    mut query: Query<(Entity, &mut Player)>,
+    mut player_query: Query<&mut Transform, With<Player>>,
+    mut sword_query: Query<(Entity, &mut Sword)>,
 ) {
     for (entity, mut player) in query.iter_mut() {
-        let mut player_entity = commands.entity(entity);
         if player.is_attacking {
-            // player_entity.insert(Attacker);
+            let mut player_transform = player_query.single_mut();
+    
+            commands.spawn()
+                .insert(Collider::capsule(Vec2::new(2.0, 2.0), Vec2::new(1.0, 1.0), 1.0))
+                .insert(Sword).insert(Transform {
+                    translation: player_transform.translation,
+                    ..Default::default()
+                });
         } else {
-            // player_entity.remove::<Attacker>();
+            for (entity, mut sword) in sword_query.iter_mut() {
+                commands.entity(entity).despawn_recursive();
+            }
         }
     }
 }

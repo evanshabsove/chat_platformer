@@ -50,6 +50,7 @@ fn display_end_screen(
         }
 
         if targets == 0 {
+            println!("No targets!");
             match app_state.current() {
                 AppState::Level1 => {
                     app_state.set(AppState::FinishScreen);

@@ -26,6 +26,7 @@ use finish_screen::FinishScreenPlugin;
 use level_select::LevelSelect;
 use mover::{Mover, MoverPlugin};
 use player::{Player, PlayerPugin};
+use stopwatch::LevelDurationEvent;
 use target::Target;
 
 pub const CLEAR: Color = Color::rgb(0.1, 0.1, 0.1);
@@ -60,8 +61,6 @@ fn main() {
         .add_startup_system(spawn_camera)
         .add_plugin(AsciiPlugin)
         .add_plugin(PlayerPugin)
-        .add_plugin(text::TextPlugin)
-        .add_plugin(stopwatch::LevelDurationPlugin)
         .add_plugin(DebugPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugin(MoverPlugin)
@@ -69,8 +68,10 @@ fn main() {
         .add_plugin(FinishScreenPlugin)
         .add_system(collision_events)
         .add_system(systems::spawn_wall_collision)
-        .add_system(systems::spawn_target_collision)
+        .add_system(systems::spawn_target_collision.label("spawn_targets"))
         .add_system(systems::spawn_level_select)
+        .add_plugin(text::TextPlugin)
+        .add_plugin(stopwatch::LevelDurationPlugin)
         .register_ldtk_int_cell::<wall::WallBundle>(1)
         .register_ldtk_entity::<target::TargetBundle>("Target")
         .register_ldtk_entity::<level_select::LevelSelectBundle>("Level_Select")
@@ -105,6 +106,7 @@ fn collision_events(
     mut level_selection: ResMut<LevelSelection>,
     mut player_query: Query<&mut Transform, With<Player>>,
     mut app_state: ResMut<State<AppState>>,
+    mut target_destroyed_event: EventWriter<LevelDurationEvent>
 ) {
     for collision_event in collision_events.iter() {
         match collision_event {
@@ -112,6 +114,7 @@ fn collision_events(
                 for (target_entity, _target) in target_query.iter_mut() {
                     if entity.id() == target_entity.id() {
                         commands.entity(*entity).despawn_recursive();
+                        target_destroyed_event.send(LevelDurationEvent);
                     }
                 }
 

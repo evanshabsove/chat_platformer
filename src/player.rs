@@ -166,9 +166,14 @@ fn spawn_hit_box(
     mut sword_query: Query<(Entity, &mut Sword)>,
 ) {
     for (entity, mut player) in query.iter_mut() {
-        if player.is_attacking {
+        let mut swords = 0;
+        for (entity, mut sword) in sword_query.iter_mut() {
+            swords += 1;
+        }
+
+        if player.is_attacking  {
             let mut player_transform = player_query.single_mut();
-    
+            
             commands.spawn()
                 .insert(Sword)
                 .insert(Collider::capsule(Vec2::new(TILE_SIZE, TILE_SIZE), Vec2::new(TILE_SIZE, TILE_SIZE), TILE_SIZE))

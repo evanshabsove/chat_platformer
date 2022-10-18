@@ -225,7 +225,6 @@ pub fn spawn_level_select(
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     level_select_query.for_each(|(&grid_coords, level_select_entity)| {
-        // println!("Parent: {:?}", level_select_entity.level);
         let texture_handle = asset_server.load("mystic_woods_free_v0.2/sprites/objects/chest_01.png");
         let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(16.0, 16.0), 1, 4);
         let texture_atlas_handle = texture_atlases.add(texture_atlas);

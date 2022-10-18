@@ -33,7 +33,6 @@ impl LdtkEntity for LevelSelectEntity {
         println!("LevelSelect added, here are some facts:");
         let mut level_value = 0;
         for field_instance in &entity_instance.field_instances {
-          println!("Field Instance {:?}", field_instance.value);
           match field_instance.value {
                 FieldValue::Int(Some(i)) => {
                   level_value = i;

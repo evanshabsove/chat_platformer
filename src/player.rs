@@ -174,11 +174,11 @@ fn spawn_hit_box(
         if player.is_attacking && swords == 0 {
             let mut player_transform = player_query.single_mut();
             
-            println!("Player transform {:?}", player_transform);
             commands.entity(entity).with_children(|parent| {
                 parent.spawn()
                 .insert(Sword)
                 .insert(Collider::capsule(Vec2::new(TILE_SIZE, TILE_SIZE), Vec2::new(TILE_SIZE / 2.0, TILE_SIZE / 2.0), TILE_SIZE / 2.0))
+                .insert(ActiveEvents::COLLISION_EVENTS)
                 .insert_bundle(
                     TransformBundle {
                         local: Transform {
@@ -192,7 +192,7 @@ fn spawn_hit_box(
             });
         } else {
             for (entity, mut sword) in sword_query.iter_mut() {
-                // commands.entity(entity).despawn_recursive();
+                commands.entity(entity).despawn_recursive();
             }
         }
     }

@@ -79,7 +79,7 @@ fn display_end_screen(
         }
     }
 
-    if keyboard.pressed(KeyCode::N) {
+    if keyboard.just_pressed(KeyCode::N) {
         let mut targets = 0;
         for _target in target_query.iter() {
             targets += 1;

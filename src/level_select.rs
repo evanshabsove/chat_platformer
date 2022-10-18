@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 use bevy_ecs_ldtk::prelude::*;
 
+use crate::AppState;
+
 #[derive(Copy, Clone, Eq, PartialEq, Debug, Default, Component)]
 pub struct LevelSelect {
   pub level: i32
@@ -43,5 +45,22 @@ impl LdtkEntity for LevelSelectEntity {
         LevelSelectEntity {
           level: level_value
         }
+    }
+}
+
+pub struct LevelSelectPlugin;
+
+impl Plugin for LevelSelectPlugin {
+    fn build(&self, app: &mut App) {
+        app.add_system_set(SystemSet::on_exit(AppState::OverWorld).with_system(remove_level_select));
+    }
+}
+
+fn remove_level_select (
+  mut level_select_query: Query<(Entity, &mut LevelSelect)>,
+  mut commands: Commands,
+) {
+    for (level_select_entity, _level_select) in level_select_query.iter_mut() {
+      commands.entity(level_select_entity).despawn_recursive();
     }
 }

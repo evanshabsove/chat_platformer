@@ -65,6 +65,7 @@ fn main() {
         .add_plugin(text::TextPlugin)
         .add_plugin(target::TargetPlugin)
         .add_plugin(collisions::CollisionsPlugin)
+        .add_plugin(level_select::LevelSelectPlugin)
         .register_ldtk_int_cell::<wall::WallBundle>(1)
         .register_ldtk_entity::<target::TargetBundle>("Target")
         .register_ldtk_entity::<level_select::LevelSelectBundle>("Level_Select")

@@ -147,7 +147,7 @@ fn animate_sprite_attack(
             if timer.just_finished() {
                 let index = ATTACK_INDEXES[(sprite.index + 1) % ATTACK_INDEXES.len()];
                 sprite.index = index;
-
+ 
                 if index == 5 {
                     player.is_attacking = false;
                 }
@@ -171,21 +171,28 @@ fn spawn_hit_box(
             swords += 1;
         }
 
-        if player.is_attacking  {
+        if player.is_attacking && swords == 0 {
             let mut player_transform = player_query.single_mut();
             
-            commands.spawn()
+            println!("Player transform {:?}", player_transform);
+            commands.entity(entity).with_children(|parent| {
+                parent.spawn()
                 .insert(Sword)
-                .insert(Collider::capsule(Vec2::new(TILE_SIZE, TILE_SIZE), Vec2::new(TILE_SIZE, TILE_SIZE), TILE_SIZE))
+                .insert(Collider::capsule(Vec2::new(TILE_SIZE, TILE_SIZE), Vec2::new(TILE_SIZE / 2.0, TILE_SIZE / 2.0), TILE_SIZE / 2.0))
                 .insert_bundle(
-                    SpatialBundle {
-                        transform: *player_transform,
-                        ..Default::default()
+                    TransformBundle {
+                        local: Transform {
+                            translation: Vec3::new(0.0, -(TILE_SIZE / 2.0), player_transform.translation.z),
+                            rotation: Quat::from_rotation_x(100.0),
+                            ..default()
+                        },
+                        ..default()
                     }
                 );
+            });
         } else {
             for (entity, mut sword) in sword_query.iter_mut() {
-                commands.entity(entity).despawn_recursive();
+                // commands.entity(entity).despawn_recursive();
             }
         }
     }

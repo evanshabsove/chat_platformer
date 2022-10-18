@@ -3,10 +3,10 @@ use bevy::{
     render::{camera::ScalingMode, texture::ImageSettings},
 };
 use bevy_ecs_ldtk::prelude::*;
-use bevy_rapier2d::{prelude::*, rapier::prelude::CollisionEventFlags};
+use bevy_rapier2d::prelude::*;
 
-mod ascii;
 mod attacker;
+mod collisions;
 mod debug;
 mod level_select;
 mod finish_screen;
@@ -15,17 +15,13 @@ mod player;
 mod systems;
 mod target;
 mod text;
-mod tilemap;
 mod wall;
 
 use attacker::Attacker;
-use ascii::AsciiPlugin;
 use debug::DebugPlugin;
 use finish_screen::FinishScreenPlugin;
-use level_select::LevelSelect;
-use mover::{Mover, MoverPlugin};
-use player::{Player, PlayerPugin};
-use target::{Target, TargetDestroyedEvent};
+use mover::MoverPlugin;
+use player::PlayerPugin;
 
 pub const CLEAR: Color = Color::rgb(0.1, 0.1, 0.1);
 pub const RESOLUTION: f32 = 16.0 / 9.0;
@@ -57,19 +53,18 @@ fn main() {
         .add_plugin(LdtkPlugin)
         .add_startup_system(spawn_map)
         .add_startup_system(spawn_camera)
-        .add_plugin(AsciiPlugin)
         .add_plugin(PlayerPugin)
         .add_plugin(DebugPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugin(MoverPlugin)
         .add_plugin(RapierDebugRenderPlugin::default())
         .add_plugin(FinishScreenPlugin)
-        .add_system(collision_events)
         .add_system(systems::spawn_wall_collision)
         .add_system(systems::spawn_target_collision.label("spawn_targets"))
         .add_system(systems::spawn_level_select)
         .add_plugin(text::TextPlugin)
         .add_plugin(target::TargetPlugin)
+        .add_plugin(collisions::CollisionsPlugin)
         .register_ldtk_int_cell::<wall::WallBundle>(1)
         .register_ldtk_entity::<target::TargetBundle>("Target")
         .register_ldtk_entity::<level_select::LevelSelectBundle>("Level_Select")
@@ -93,47 +88,6 @@ fn spawn_camera(mut commands: Commands) {
     };
 
     commands.spawn_bundle(camera).insert(MainCamera);
-}
-
-fn collision_events(
-    mut mover_query: Query<(Entity, &mut Mover)>,
-    mut collision_events: EventReader<CollisionEvent>,
-    mut commands: Commands,
-    mut target_query: Query<(Entity, &mut Target)>,
-    mut level_select_query: Query<(Entity, &mut LevelSelect)>,
-    mut level_selection: ResMut<LevelSelection>,
-    mut app_state: ResMut<State<AppState>>,
-    mut target_destroyed_event: EventWriter<TargetDestroyedEvent>
-) {
-    for collision_event in collision_events.iter() {
-        match collision_event {
-            CollisionEvent::Started(_, entity, CollisionEventFlags::SENSOR) => {
-                for (target_entity, _target) in target_query.iter_mut() {
-                    if entity.id() == target_entity.id() {
-                        commands.entity(*entity).despawn_recursive();
-                        target_destroyed_event.send(TargetDestroyedEvent);
-                    }
-                }
-
-                for (level_select_entity, level_select) in level_select_query.iter_mut() {
-                    if entity.id() == level_select_entity.id() {
-                        *level_selection = LevelSelection::Index(level_select.level as usize);
-                        app_state.set(AppState::Level1);
-                    }
-                }
-            }
-            CollisionEvent::Started(_, _, _) => {
-                for (_entity, mut mover) in mover_query.iter_mut() {
-                    set_jumping_false_if_touching_floor(&mut mover);
-                }
-            }
-            CollisionEvent::Stopped(_, _, _) => {}
-        }
-    }
-}
-
-fn set_jumping_false_if_touching_floor(mover: &mut Mover) {
-    mover.is_jumping = false;
 }
 
 fn spawn_map(mut commands: Commands, asset_server: Res<AssetServer>) {

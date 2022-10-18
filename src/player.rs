@@ -170,11 +170,14 @@ fn spawn_hit_box(
             let mut player_transform = player_query.single_mut();
     
             commands.spawn()
-                .insert(Collider::capsule(Vec2::new(2.0, 2.0), Vec2::new(1.0, 1.0), 1.0))
-                .insert(Sword).insert(Transform {
-                    translation: player_transform.translation,
-                    ..Default::default()
-                });
+                .insert(Sword)
+                .insert(Collider::capsule(Vec2::new(TILE_SIZE, TILE_SIZE), Vec2::new(TILE_SIZE, TILE_SIZE), TILE_SIZE))
+                .insert_bundle(
+                    SpatialBundle {
+                        transform: *player_transform,
+                        ..Default::default()
+                    }
+                );
         } else {
             for (entity, mut sword) in sword_query.iter_mut() {
                 commands.entity(entity).despawn_recursive();

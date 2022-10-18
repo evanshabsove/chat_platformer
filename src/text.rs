@@ -2,6 +2,7 @@ use bevy::prelude::*;
 use bevy::time::Stopwatch;
 use bevy_inspector_egui::Inspectable;
 
+use crate::AppState;
 use crate::target::Target;
 pub struct TextPlugin;
 
@@ -15,7 +16,8 @@ pub struct DurationText {
 
 impl Plugin for TextPlugin {
     fn build(&self, app: &mut App) {
-        app.add_startup_system(spawn_text).add_system(alter_text);
+        app.add_startup_system(spawn_text).add_system(alter_text)
+            .add_system_set(SystemSet::on_enter(AppState::Level1).with_system(reset_duration));
     }
 }
 
@@ -90,5 +92,13 @@ fn alter_text(mut text_query: Query<&mut Text, With<ScoreText>>, target_query: Q
     }
     for mut text in &mut text_query {
         text.sections[0].value = format!("{targets}");
+    }
+}
+
+fn reset_duration(
+    mut text_query: Query<&mut DurationText>,
+) {
+    for mut dration_text in text_query.iter_mut() {
+        dration_text.time.reset();
     }
 }

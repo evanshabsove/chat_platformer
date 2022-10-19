@@ -108,6 +108,6 @@ fn spawn_map(mut commands: Commands, asset_server: Res<AssetServer>) {
 }
 
 fn play_background_music(asset_server: Res<AssetServer>, audio: Res<Audio>) {
-    // let music = asset_server.load("music/tell_me_you_know.mp3");
-    // audio.play(music).looped();
+    let music = asset_server.load("music/tell_me_you_know.mp3");
+    audio.play(music).looped();
 }

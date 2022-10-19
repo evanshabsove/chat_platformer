@@ -13,6 +13,7 @@ mod level_select;
 mod finish_screen;
 mod mover;
 mod player;
+mod player_spawn;
 mod systems;
 mod target;
 mod text;
@@ -73,6 +74,7 @@ fn main() {
         .register_ldtk_int_cell::<wall::WallBundle>(1)
         .register_ldtk_entity::<target::TargetBundle>("Target")
         .register_ldtk_entity::<level_select::LevelSelectBundle>("Level_Select")
+        .register_ldtk_entity::<player_spawn::PlayerSpawnBundle>("Player")
         .run();
 }
 

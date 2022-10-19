@@ -1,8 +1,9 @@
 use bevy::prelude::*;
 use bevy_inspector_egui::Inspectable;
 use bevy_rapier2d::prelude::*;
+use bevy_ecs_ldtk::prelude::GridCoords;
 
-use crate::{mover::Mover, attacker::Attacker, GRAV, TILE_SIZE, MainCamera, AppState};
+use crate::{mover::Mover, attacker::Attacker, GRAV, TILE_SIZE, MainCamera, AppState, player_spawn::PlayerSpawnEntity};
 
 pub struct PlayerPugin;
 
@@ -22,8 +23,7 @@ impl Plugin for PlayerPugin {
         .add_system(animate_sprite_movement)
         .add_system(animate_sprite_attack)
         .add_system(spawn_hit_box)
-        .add_system_set(SystemSet::on_enter(AppState::OverWorld).with_system(move_player_to_spawn))
-        .add_system_set(SystemSet::on_enter(AppState::Level1).with_system(move_player_to_spawn));
+        .add_system(move_player_to_spawn);
     }
 }
 
@@ -43,11 +43,14 @@ fn camera_movement(
 
 fn move_player_to_spawn(
     mut player_query: Query<&mut Transform, With<Player>>,
+    player_spawn_query: Query<&GridCoords, Added<PlayerSpawnEntity>>,
 ) {
-    let mut player_transform = player_query.single_mut();
-    
-    player_transform.translation.x = 100.0;
-    player_transform.translation.y = 100.0;
+    player_spawn_query.for_each(|&grid_coords| {
+        let mut player_transform = player_query.single_mut();
+        
+        player_transform.translation.x = grid_coords.x as f32 * TILE_SIZE;
+        player_transform.translation.y = grid_coords.y as f32 * TILE_SIZE;
+    });
 }
 
 fn spawn_player(

@@ -588,7 +588,22 @@
 					"seed": 5912249,
 					"overrideTilesetUid": null,
 					"gridTiles": [],
-					"entityInstances": []
+					"entityInstances": [
+						{
+							"__identifier": "Player",
+							"__grid": [6,9],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#94D9B3",
+							"iid": "8ed9d150-2a00-11ed-b338-9fe8ed3ddbac",
+							"width": 16,
+							"height": 16,
+							"defUid": 11,
+							"px": [96,144],
+							"fieldInstances": [{ "__identifier": "Player", "__value": [], "__type": "Array<LocalEnum.Player>", "__tile": null, "defUid": 19, "realEditorValues": [] }]
+						}
+					]
 				},
 				{
 					"__identifier": "Target",
@@ -908,6 +923,20 @@
 							"defUid": 25,
 							"px": [192,208],
 							"fieldInstances": [{ "__identifier": "Integer", "__value": 0, "__type": "Int", "__tile": null, "defUid": 31, "realEditorValues": [{ "id": "V_Int", "params": [0] }] }]
+						},
+						{
+							"__identifier": "Player",
+							"__grid": [3,12],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#94D9B3",
+							"iid": "85b852e0-2a00-11ed-b338-b78673185fc3",
+							"width": 16,
+							"height": 16,
+							"defUid": 11,
+							"px": [48,192],
+							"fieldInstances": [{ "__identifier": "Player", "__value": [], "__type": "Array<LocalEnum.Player>", "__tile": null, "defUid": 19, "realEditorValues": [] }]
 						}
 					]
 				},
@@ -1103,7 +1132,22 @@
 					"seed": 786519,
 					"overrideTilesetUid": null,
 					"gridTiles": [],
-					"entityInstances": []
+					"entityInstances": [
+						{
+							"__identifier": "Player",
+							"__grid": [3,19],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#94D9B3",
+							"iid": "930d8ff0-2a00-11ed-b338-ff2d4bdb693c",
+							"width": 16,
+							"height": 16,
+							"defUid": 11,
+							"px": [48,304],
+							"fieldInstances": [{ "__identifier": "Player", "__value": [], "__type": "Array<LocalEnum.Player>", "__tile": null, "defUid": 19, "realEditorValues": [] }]
+						}
+					]
 				},
 				{
 					"__identifier": "Target",

@@ -10,7 +10,7 @@
 	},
 	"jsonVersion": "1.1.3",
 	"appBuildId": 458364,
-	"nextUid": 33,
+	"nextUid": 37,
 	"identifierStyle": "Capitalize",
 	"worldLayout": "Free",
 	"worldGridWidth": 256,
@@ -319,6 +319,69 @@
 					"tilesetUid": null
 				}
 			]
+		},
+		{
+			"identifier": "Instruction",
+			"uid": 33,
+			"tags": [],
+			"width": 16,
+			"height": 16,
+			"resizableX": false,
+			"resizableY": false,
+			"keepAspectRatio": false,
+			"tileOpacity": 1,
+			"fillOpacity": 1,
+			"lineOpacity": 1,
+			"hollow": false,
+			"color": "#0E4223",
+			"renderMode": "Rectangle",
+			"showName": true,
+			"tilesetId": null,
+			"tileId": null,
+			"tileRenderMode": "FitInside",
+			"tileRect": null,
+			"nineSliceBorders": [],
+			"maxCount": 0,
+			"limitScope": "PerLevel",
+			"limitBehavior": "MoveLastOne",
+			"pivotX": 0,
+			"pivotY": 0,
+			"fieldDefs": [
+				{
+					"identifier": "Multilines",
+					"__type": "String",
+					"uid": 34,
+					"type": "F_Text",
+					"isArray": false,
+					"canBeNull": true,
+					"arrayMinLength": null,
+					"arrayMaxLength": null,
+					"editorDisplayMode": "Hidden",
+					"editorDisplayPos": "Above",
+					"editorAlwaysShow": false,
+					"editorCutLongValues": true,
+					"editorTextSuffix": null,
+					"editorTextPrefix": null,
+					"useForSmartColor": false,
+					"min": null,
+					"max": null,
+					"regex": null,
+					"acceptFileTypes": null,
+					"defaultOverride": {
+						"id": "V_String",
+						"params": [
+							"Hello World!  Use WASD to move and jump  Use Space to attack  Break all the chests as fast as you can!  Press N when you are ready to start"
+						]
+					},
+					"textLanguageMode": null,
+					"symmetricalRef": false,
+					"autoChainRef": true,
+					"allowOutOfLevelRef": true,
+					"allowedRefs": "OnlySame",
+					"allowedRefTags": [],
+					"tilesetUid": null
+				}
+			]
 		}
 	], "tilesets": [
 		{
@@ -540,6 +603,28 @@
 			"cachedPixelData": {
 				"opaqueTiles": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
 				"averageColors": "00000000000000000000000000000000000000000000000000000000000000000000000000007543000000007543000000007543000000006532000000006532000000006532000000006656000000006666000000006656000000006665000000007655000000007655000000000000000000000000000000000000000000000000000000000000000000000000000000009643000000008643000000007543000000009643000000008643000000007543000000005445000000006555000000005655000000006445000000006556000000006655000000000000000000000000000000000000000000000000000000000000000000000000000000006542132113216543000000007543000000006532000000000000000000000000000000006655000037789aaa5fff0fff77660000000077650000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000044320211000034320321000013210000000000000000000000000000000000000000000076550211000077551221000075433654000000000000000000000000000000000000"
+			}
+		},
+		{
+			"__cWid": 15,
+			"__cHei": 9,
+			"identifier": "Objects",
+			"uid": 36,
+			"relPath": "mystic_woods_free_v0.2/sprites/objects/objects.png",
+			"embedAtlas": null,
+			"pxWid": 231,
+			"pxHei": 143,
+			"tileGridSize": 16,
+			"spacing": 0,
+			"padding": 0,
+			"tags": [],
+			"tagsSourceEnumUid": null,
+			"enumTags": [],
+			"customData": [],
+			"savedSelections": [],
+			"cachedPixelData": {
+				"opaqueTiles": "000000000000001000000000000001000000000000001000000000000001000000000000001000000000000001010000000000001010000000000001111111111111111",
+				"averageColors": "86430000000000000000a6530000000000000000e864e86400000000000096680000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000e96600000000000000000000000000000000000000000000000000000000d9440000000000000000003100000000000000000000000000000000000000000000000000008483f5938493000000000000000000000000000000000000000000000000d483f593c4830000000000000000003154835483000000000000000000008362f4629252000000000000c493c483a483a48356534753000000000000000000000000000000000000000000000000000000000000000000000000"
 			}
 		}
 	], "enums": [{ "identifier": "Player", "uid": 18, "values": [ { "id": "PlayerHead", "tileId": 19, "color": 5717805, "__tileSrcRect": [16,16,16,16] }, { "id": "PlayerFeet", "tileId": 37, "color": 6970719, "__tileSrcRect": [16,32,16,16] } ], "iconTilesetUid": 17, "externalRelPath": null, "externalFileChecksum": null, "tags": [] }], "externalEnums": [], "levelFields": [] },
@@ -897,34 +982,6 @@
 					"gridTiles": [],
 					"entityInstances": [
 						{
-							"__identifier": "Level_Select",
-							"__grid": [12,14],
-							"__pivot": [0,0],
-							"__tags": [],
-							"__tile": null,
-							"__smartColor": "#002E8D",
-							"iid": "1824c1a0-2a00-11ed-922c-f7da6f5e24d8",
-							"width": 16,
-							"height": 16,
-							"defUid": 25,
-							"px": [192,224],
-							"fieldInstances": [{ "__identifier": "Integer", "__value": 0, "__type": "Int", "__tile": null, "defUid": 31, "realEditorValues": [{ "id": "V_Int", "params": [0] }] }]
-						},
-						{
-							"__identifier": "Level_Select",
-							"__grid": [12,13],
-							"__pivot": [0,0],
-							"__tags": [],
-							"__tile": null,
-							"__smartColor": "#002E8D",
-							"iid": "1882e730-2a00-11ed-922c-c57c4f5816ef",
-							"width": 16,
-							"height": 16,
-							"defUid": 25,
-							"px": [192,208],
-							"fieldInstances": [{ "__identifier": "Integer", "__value": 0, "__type": "Int", "__tile": null, "defUid": 31, "realEditorValues": [{ "id": "V_Int", "params": [0] }] }]
-						},
-						{
 							"__identifier": "Player",
 							"__grid": [3,12],
 							"__pivot": [0,0],
@@ -937,6 +994,20 @@
 							"defUid": 11,
 							"px": [48,192],
 							"fieldInstances": [{ "__identifier": "Player", "__value": [], "__type": "Array<LocalEnum.Player>", "__tile": null, "defUid": 19, "realEditorValues": [] }]
+						},
+						{
+							"__identifier": "Instruction",
+							"__grid": [9,14],
+							"__pivot": [0,0],
+							"__tags": [],
+							"__tile": null,
+							"__smartColor": "#0E4223",
+							"iid": "09c6fd00-2a00-11ed-b338-a136ca5dde44",
+							"width": 16,
+							"height": 16,
+							"defUid": 33,
+							"px": [144,224],
+							"fieldInstances": [{ "__identifier": "Multilines", "__value": "Hello World!\n\nUse WASD to move and jump\n\nUse Space to attack\n\nBreak all the chests as fast as you can!\n\nPress N when you are ready to start", "__type": "String", "__tile": null, "defUid": 34, "realEditorValues": [] }]
 						}
 					]
 				},

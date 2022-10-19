@@ -89,7 +89,7 @@ fn display_end_screen(
             match app_state.current() {
                 AppState::OverWorld => {
                     app_state.set(AppState::Level1);
-                    *level_selection = LevelSelection::Index(1);
+                    *level_selection = LevelSelection::Index(0);
                 },
                 AppState::Level1 => {
                     app_state.set(AppState::Level2);

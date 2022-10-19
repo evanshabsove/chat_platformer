@@ -16,12 +16,17 @@ pub struct DurationText {
 
 impl Plugin for TextPlugin {
     fn build(&self, app: &mut App) {
-        app.add_startup_system(spawn_text).add_system(alter_text)
-            .add_system_set(SystemSet::on_enter(AppState::Level1).with_system(reset_duration));
+        app.add_system(alter_text)
+            .add_system_set(SystemSet::on_enter(AppState::OverWorld).with_system(spawn_instruction_text))
+            .add_system_set(SystemSet::on_enter(AppState::Level1).with_system(reset_duration))
+            .add_system_set(SystemSet::on_enter(AppState::Level1).with_system(spawn_score_text));
     }
 }
 
-fn spawn_text(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn spawn_instruction_text(mut commands: Commands, asset_server: Res<AssetServer>) {
+}
+
+fn spawn_score_text(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands
         .spawn_bundle(
             // Create a TextBundle that has a Text with a single section.

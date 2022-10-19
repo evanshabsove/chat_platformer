@@ -9,6 +9,7 @@ use bevy_kira_audio::prelude::*;
 mod attacker;
 mod collisions;
 mod debug;
+mod instruction;
 mod level_select;
 mod finish_screen;
 mod mover;
@@ -59,7 +60,7 @@ fn main() {
         .add_startup_system(spawn_camera)
         .add_startup_system(play_background_music)
         .add_plugin(PlayerPugin)
-        // .add_plugin(DebugPlugin)
+        .add_plugin(DebugPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugin(MoverPlugin)
         // .add_plugin(RapierDebugRenderPlugin::default())
@@ -71,10 +72,12 @@ fn main() {
         .add_plugin(target::TargetPlugin)
         .add_plugin(collisions::CollisionsPlugin)
         .add_plugin(level_select::LevelSelectPlugin)
+        .add_plugin(instruction::InstructionPlugin)
         .register_ldtk_int_cell::<wall::WallBundle>(1)
         .register_ldtk_entity::<target::TargetBundle>("Target")
         .register_ldtk_entity::<level_select::LevelSelectBundle>("Level_Select")
         .register_ldtk_entity::<player_spawn::PlayerSpawnBundle>("Player")
+        .register_ldtk_entity::<instruction::InstructionBundle>("Instruction")
         .run();
 }
 
@@ -105,6 +108,6 @@ fn spawn_map(mut commands: Commands, asset_server: Res<AssetServer>) {
 }
 
 fn play_background_music(asset_server: Res<AssetServer>, audio: Res<Audio>) {
-    let music = asset_server.load("music/tell_me_you_know.mp3");
-    audio.play(music).looped();
+    // let music = asset_server.load("music/tell_me_you_know.mp3");
+    // audio.play(music).looped();
 }

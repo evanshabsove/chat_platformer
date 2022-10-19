@@ -45,7 +45,7 @@ fn setup_finish_screen(mut commands: Commands,  asset_server: Res<AssetServer>) 
             .with_text_alignment(TextAlignment::TOP_CENTER)
             // Set the style of the TextBundle itself.
             .with_style(Style {
-                align_self: AlignSelf::FlexEnd,
+                align_self: AlignSelf::Center,
                 position_type: PositionType::Absolute,
                 position: UiRect {
                     bottom: Val::Px(5.0),

@@ -62,7 +62,7 @@ fn spawn_score_text(mut commands: Commands, asset_server: Res<AssetServer>) {
             // Create a TextBundle that has a Text with a single section.
             TextBundle::from_sections([
                 TextSection::new(
-                    "Time: ",
+                    "\n Time: ",
                     TextStyle {
                         font: asset_server.load("fonts/BebasNeue-Regular.ttf"),
                         font_size: 100.0,
@@ -81,7 +81,7 @@ fn spawn_score_text(mut commands: Commands, asset_server: Res<AssetServer>) {
             .with_text_alignment(TextAlignment::TOP_CENTER)
             // Set the style of the TextBundle itself.
             .with_style(Style {
-                align_self: AlignSelf::FlexStart,
+                align_self: AlignSelf::FlexEnd,
                 ..default()
             }),
         )

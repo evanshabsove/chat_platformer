@@ -60,7 +60,7 @@ fn main() {
         .add_startup_system(spawn_camera)
         .add_startup_system(play_background_music)
         .add_plugin(PlayerPugin)
-        // .add_plugin(DebugPlugin)
+        .add_plugin(DebugPlugin)
         .add_plugin(RapierPhysicsPlugin::<NoUserData>::pixels_per_meter(100.0))
         .add_plugin(MoverPlugin)
         // .add_plugin(RapierDebugRenderPlugin::default())
